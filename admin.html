@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intelli-NIET — Admin Dashboard</title>
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="container">
+          <img src="NIET_Logo.png" alt="logo">
+          <div class="text">
+            <div class="niet">Intelli-NIET</div>
+            <p>Admin Portal</p>
+          </div>
+        </div>
+      </div>
+
+    <div class="sidebar-user sidebar-user--clickable" role="button" tabindex="0" title="Edit profile" onclick="switchTab('profile')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('profile');}">
+      <div class="user-avatar" id="sidebar-avatar">AD</div>
+      <div class="user-info">
+        <div class="name" id="sidebar-display-name">Administrator</div>
+        <span class="role-badge role-admin">Admin</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-label">Management</div>
+
+        <button class="nav-item active" id="nav-dashboard" onclick="switchTab('dashboard')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          Dashboard
+        </button>
+
+        <button class="nav-item" id="nav-complaints" onclick="switchTab('complaints')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          All Complaints
+          <span class="nav-badge-orange">5</span>
+        </button>
+
+        <button class="nav-item" id="nav-pending" onclick="switchTab('pending')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          Pending Action
+          <span class="nav-badge-yellow">3</span>
+        </button>
+
+        <button class="nav-item" id="nav-notifications" onclick="switchTab('notifications')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          Notifications
+        </button>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Reports</div>
+        <button class="nav-item" id="nav-analytics" onclick="switchTab('analytics')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+          Analytics
+        </button>
+      </div>
+    </nav>
+
+    <div class="sidebar-contact">
+      <button class="btn-contact" onclick="openContact()">Contact Us</button>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+  <main class="main-content">
+
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Admin Dashboard</div>
+      <div class="topbar-actions">
+        <div class="notif-btn" onclick="switchTab('notifications')" title="Notifications">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          <div class="notif-dot" id="topbar-notif-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-pad">
+
+      <!-- ─────────────── DASHBOARD TAB ─────────────── -->
+      <div id="tab-dashboard" class="tab-pane active">
+
+        <!-- KPI cards -->
+        <div class="admin-stats">
+          <div class="big-stat">
+            <div class="sc-icon ic-blue">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+            </div>
+            <div class="bs-val">5</div>
+            <div class="bs-lbl">Total Complaints</div>
+            <div class="bs-delta delta-up">↑ 2 this week</div>
+          </div>
+          <div class="big-stat">
+            <div class="sc-icon ic-yellow">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </div>
+            <div class="bs-val">3</div>
+            <div class="bs-lbl">Pending Action</div>
+            <div class="bs-delta delta-dn">↓ 1 from yesterday</div>
+          </div>
+          <div class="big-stat">
+            <div class="sc-icon ic-green">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div class="bs-val">2</div>
+            <div class="bs-lbl">Resolved</div>
+            <div class="bs-delta delta-up">↑ 2 this week</div>
+          </div>
+          <div class="big-stat">
+            <div class="sc-icon ic-red">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            </div>
+            <div class="bs-val">0</div>
+            <div class="bs-lbl">Delayed Issues</div>
+            <div class="bs-delta" style="color:var(--green);">✓ On track</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="two-col">
+          <div class="chart-card">
+            <h4>Issues by Category</h4>
+            <div class="bar-chart">
+              <div class="bar-row"><span class="bar-label">Water / Plumbing</span><div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--sky);"></div></div><span class="bar-val" style="color:var(--sky);">4</span></div>
+              <div class="bar-row"><span class="bar-label">Electrical</span><div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--yellow);"></div></div><span class="bar-val" style="color:var(--yellow);">1</span></div>
+              <div class="bar-row"><span class="bar-label">Furniture</span><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--green);"></div></div><span class="bar-val" style="color:var(--muted);">0</span></div>
+              <div class="bar-row"><span class="bar-label">Network</span><div class="bar-track"><div class="bar-fill" style="width:0%;background:#a855f7;"></div></div><span class="bar-val" style="color:var(--muted);">0</span></div>
+              <div class="bar-row"><span class="bar-label">Other</span><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--muted);"></div></div><span class="bar-val" style="color:var(--muted);">0</span></div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h4>Status Distribution</h4>
+            <div class="donut-wrap">
+              <svg class="donut-svg" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="45" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="18"/>
+                <circle cx="60" cy="60" r="45" fill="none" stroke="#38bdf8" stroke-width="18" stroke-dasharray="56.5 226" stroke-dashoffset="0"      transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="45" fill="none" stroke="#eab308" stroke-width="18" stroke-dasharray="28.3 226" stroke-dashoffset="-56.5"  transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="45" fill="none" stroke="#22c55e" stroke-width="18" stroke-dasharray="56.5 226" stroke-dashoffset="-84.8"  transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="45" fill="none" stroke="#f97316" stroke-width="18" stroke-dasharray="28.3 226" stroke-dashoffset="-141.3" transform="rotate(-90 60 60)"/>
+                <text x="60" y="56" text-anchor="middle" fill="white"    font-size="14" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">5</text>
+                <text x="60" y="70" text-anchor="middle" fill="#94a3b8"  font-size="8"  font-family="DM Sans,sans-serif">Total</text>
+              </svg>
+              <div class="donut-legend">
+                <div class="leg-item"><div class="leg-dot" style="background:var(--sky);"></div><span style="color:var(--muted);">Submitted</span><span style="margin-left:auto;padding-left:16px;font-weight:600;">2</span></div>
+                <div class="leg-item"><div class="leg-dot" style="background:var(--yellow);"></div><span style="color:var(--muted);">In Progress</span><span style="margin-left:auto;padding-left:16px;font-weight:600;">1</span></div>
+                <div class="leg-item"><div class="leg-dot" style="background:var(--green);"></div><span style="color:var(--muted);">Closed</span><span style="margin-left:auto;padding-left:16px;font-weight:600;">1</span></div>
+                <div class="leg-item"><div class="leg-dot" style="background:var(--accent);"></div><span style="color:var(--muted);">Reopened</span><span style="margin-left:auto;padding-left:16px;font-weight:600;">1</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent complaints -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div class="section-hdr">
+            <h4>Recent Complaints</h4>
+            <button class="filter-btn" onclick="switchTab('complaints')">View All →</button>
+          </div>
+          <table class="complaint-table">
+            <thead>
+              <tr><th>ID</th><th>Title</th><th>Reported By</th><th>Status</th><th>Priority</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color:var(--muted);font-size:12px;">CMP-005</td>
+                <td>Fan not working in classroom</td>
+                <td style="color:var(--muted);">Prof. Ramesh</td>
+                <td><span class="badge b-progress">IN PROGRESS</span></td>
+                <td><span class="pri-dot p-high">High</span></td>
+                <td><div class="action-btns">
+                  <button class="action-btn ab-view"    onclick="openDetailModal('CMP-005','Fan not working in classroom','Electrical','IN_PROGRESS','HIGH','Apr 3, 2026','The ceiling fan is not working in Block A room 101.','A','1st','101')">View</button>
+                  <button class="action-btn ab-resolve" onclick="openResolveModal('CMP-005')">Resolve</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td style="color:var(--muted);font-size:12px;">CMP-003</td>
+                <td>Water leakage near classroom</td>
+                <td style="color:var(--muted);">Prof. Ramesh</td>
+                <td><span class="badge b-reopened">REOPENED</span></td>
+                <td><span class="pri-dot p-high">High</span></td>
+                <td><div class="action-btns">
+                  <button class="action-btn ab-view"   onclick="openDetailModal('CMP-003','Water leakage near classroom','Water','REOPENED','HIGH','Apr 1, 2026','Water leakage near classroom entrance.','C','2nd','205')">View</button>
+                  <button class="action-btn ab-update" onclick="openUpdateModal('CMP-003')">Update</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td style="color:var(--muted);font-size:12px;">CMP-002</td>
+                <td>Water leakage near classroom</td>
+                <td style="color:var(--muted);">Prof. Ramesh</td>
+                <td><span class="badge b-submitted">SUBMITTED</span></td>
+                <td><span class="pri-dot p-high">High</span></td>
+                <td><div class="action-btns">
+                  <button class="action-btn ab-view"   onclick="openDetailModal('CMP-002','Water leakage near classroom','Water','SUBMITTED','HIGH','Apr 1, 2026','Water leakage near classroom entrance.','A','1st','101')">View</button>
+                  <button class="action-btn ab-update" onclick="openUpdateModal('CMP-002')">Update</button>
+                </div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /tab-dashboard -->
+
+      <!-- ─────────────── ALL COMPLAINTS TAB ─────────────── -->
+      <div id="tab-complaints" class="tab-pane">
+        <div class="complaints-header">
+          <h3 style="font-size:20px;font-weight:700;">All Complaints</h3>
+          <div class="filter-row">
+            <input type="text" class="search-input" placeholder="🔍 Search complaints…" oninput="searchComplaints(this.value)">
+            <select class="status-select" onchange="filterByStatus(this.value)">
+              <option value="all">All Status</option>
+              <option value="submitted">SUBMITTED</option>
+              <option value="progress">IN PROGRESS</option>
+              <option value="resolved">RESOLVED</option>
+              <option value="closed">CLOSED</option>
+              <option value="reopened">REOPENED</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+          <table class="complaint-table" id="all-complaints-table">
+            <thead>
+              <tr><th>ID</th><th>Title</th><th>Category</th><th>Location</th><th>Reporter</th><th>Status</th><th>Priority</th><th>Date</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr data-status="progress" data-search="fan not working classroom electrical block a">
+                <td style="color:var(--muted);font-size:12px;">CMP-005</td>
+                <td>Fan not working in classroom</td>
+                <td style="color:var(--muted);">Electrical</td>
+                <td style="font-size:12px;color:var(--muted);">Block A, R-101</td>
+                <td style="color:var(--muted);">Prof. Ramesh</td>
+                <td><span class="badge b-progress">IN PROGRESS</span></td>
+                <td><span class="pri-dot p-high">High</span></td>
+                <td style="color:var(--muted);font-size:13px;">Apr 3</td>
+                <td><div class="action-btns">
+                  <button class="action-btn ab-view"    onclick="openDetailModal('CMP-005','Fan not working in classroom','Electrical','IN_PROGRESS','HIGH','Apr 3, 2026','The ceiling fan is not working in Block A room 101.','A','1st','101')">View</button>
+                  <button class="action-btn ab-resolve" onclick="openResolveModal('CMP-005')">Resolve</button>
+                  <button class="action-btn ab-delay"   onclick="openDelayModal('CMP-005')">Delay</button>
+                </div></td>
+              </tr>
+              <tr data-status="closed" data-search="water leakage classroom block b">
+                <td style="color:var(--muted);font-size:12px;">CMP-004</td>
+                <td>Water leakage near classroom</td>
+                <td style="color:var(--muted);">Water</td>
+                <td style="font-size:12px;color:var(--muted);">Block B, R-102</td>
+                <td style="color:var(--muted);">Prof. Ramesh</td>
+                <td><span class="badge b-closed">CLOSED</span></td>
+                <td><span class="pri-dot p-high">High</span></td>
+                <td style="color:var(--muted);font-size:13px;">Apr 1</td>
+                <td><div class="action-btns">
+                  <button class="action-btn ab-view" onclick="openDetailModal('CMP-004','Water leakage near classroom','Water','CLOSED','HIGH','Apr 1, 2026','Water leakage near classroom entrance.','B','Ground','102')">View</button>
+                </div></td>
+              </tr>
+              <tr data-status="reopened" data-search="water leakage classroom block c">
+                <td style="color:var(--muted);font-size:12px;">CMP-003</td>
+                <td>Water leakage near classroom</td>
+                <td style="color:var(--muted);">Water</td>
+                <td style="font-size:12px;color:var(--muted);">Block C, R-205</td>
+                <td style="color:var(--muted);">Prof. Ramesh</td>
+                <td><span class="badge b-reopened">REOPENED</span></td>
+                <td><span class="pri-dot p-high">High</span></td>
+                <td style="color:var(--muted);font-size:13px;">Apr 1</td>
+                <td><div class="action-btns">
+                  <button class="action-btn ab-view"   onclick="openDetailModal('CMP-003','Water leakage near classroom','Water','REOPENED','HIGH','Apr 1, 2026','Water leakage near classroom entrance.','C','2nd','205')">View</button>
+                  <button class="action-btn ab-update" onclick="openUpdateModal('CMP-003')">Update</button>
+                </div></td>
+              </tr>
+              <tr data-status="submitted" data-search="water leakage classroom block a">
+                <td style="color:var(--muted);font-size:12px;">CMP-002</td>
+                <td>Water leakage near classroom</td>
+                <td style="color:var(--muted);">Water</td>
+                <td style="font-size:12px;color:var(--muted);">Block A, R-101</td>
+                <td style="color:var(--muted);">Prof. Ramesh</td>
+                <td><span class="badge b-submitted">SUBMITTED</span></td>
+                <td><span class="pri-dot p-high">High</span></td>
+                <td style="color:var(--muted);font-size:13px;">Apr 1</td>
+                <td><div class="action-btns">
+                  <button class="action-btn ab-view"   onclick="openDetailModal('CMP-002','Water leakage near classroom','Water','SUBMITTED','HIGH','Apr 1, 2026','Water leakage near classroom entrance.','A','1st','101')">View</button>
+                  <button class="action-btn ab-update" onclick="openUpdateModal('CMP-002')">Update</button>
+                </div></td>
+              </tr>
+              <tr data-status="submitted" data-search="water leakage lab block a">
+                <td style="color:var(--muted);font-size:12px;">CMP-001</td>
+                <td>Water leakage in lab</td>
+                <td style="color:var(--muted);">Water</td>
+                <td style="font-size:12px;color:var(--muted);">Block A, Lab-1</td>
+                <td style="color:var(--muted);">Prof. Ramesh</td>
+                <td><span class="badge b-submitted">SUBMITTED</span></td>
+                <td><span class="pri-dot p-medium">Medium</span></td>
+                <td style="color:var(--muted);font-size:13px;">Apr 1</td>
+                <td><div class="action-btns">
+                  <button class="action-btn ab-view"   onclick="openDetailModal('CMP-001','Water leakage in lab','Water','SUBMITTED','MEDIUM','Apr 1, 2026','Pipe is leaking near lab entrance.','A','Ground','Lab-1')">View</button>
+                  <button class="action-btn ab-update" onclick="openUpdateModal('CMP-001')">Update</button>
+                </div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div><!-- /tab-complaints -->
+
+      <!-- ─────────────── PENDING ACTION TAB ─────────────── -->
+      <div id="tab-pending" class="tab-pane">
+        <h3 style="font-size:20px;font-weight:700;margin-bottom:20px;">Pending Action Required</h3>
+        <div class="warning-box">⚠️ These complaints require your immediate attention for status update or resolution.</div>
+
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+          <table class="complaint-table">
+            <thead>
+              <tr><th>ID</th><th>Title</th><th>Category</th><th>Reporter</th><th>Status</th><th>Submitted</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color:var(--muted);font-size:12px;">CMP-005</td>
+                <td>Fan not working in classroom</td>
+                <td style="color:var(--muted);">Electrical</td>
+                <td style="color:var(--muted);">Prof. Ramesh</td>
+                <td><span class="badge b-progress">IN PROGRESS</span></td>
+                <td style="color:var(--muted);font-size:13px;">Apr 3, 2026</td>
+                <td><div class="action-btns">
+                  <button class="action-btn ab-resolve" onclick="openResolveModal('CMP-005')">Mark Resolved</button>
+                  <button class="action-btn ab-delay"   onclick="openDelayModal('CMP-005')">Mark Delay</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td style="color:var(--muted);font-size:12px;">CMP-003</td>
+                <td>Water leakage near classroom</td>
+                <td style="color:var(--muted);">Water</td>
+                <td style="color:var(--muted);">Prof. Ramesh</td>
+                <td><span class="badge b-reopened">REOPENED</span></td>
+                <td style="color:var(--muted);font-size:13px;">Apr 1, 2026</td>
+                <td><div class="action-btns">
+                  <button class="action-btn ab-update" onclick="openUpdateModal('CMP-003')">Update Status</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td style="color:var(--muted);font-size:12px;">CMP-002</td>
+                <td>Water leakage near classroom</td>
+                <td style="color:var(--muted);">Water</td>
+                <td style="color:var(--muted);">Prof. Ramesh</td>
+                <td><span class="badge b-submitted">SUBMITTED</span></td>
+                <td style="color:var(--muted);font-size:13px;">Apr 1, 2026</td>
+                <td><div class="action-btns">
+                  <button class="action-btn ab-update" onclick="openUpdateModal('CMP-002')">Update Status</button>
+                </div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div><!-- /tab-pending -->
+
+      <!-- ─────────────── ANALYTICS TAB ─────────────── -->
+      <div id="tab-analytics" class="tab-pane">
+        <h3 style="font-size:20px;font-weight:700;margin-bottom:24px;">Analytics Overview</h3>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;">
+          <div class="big-stat"><div class="bs-val" style="color:var(--accent);">40%</div><div class="bs-lbl">Resolution Rate</div></div>
+          <div class="big-stat"><div class="bs-val" style="color:var(--green);">2.1d</div><div class="bs-lbl">Avg Resolution Time</div></div>
+          <div class="big-stat"><div class="bs-val" style="color:var(--sky);">4.2</div><div class="bs-lbl">Complaints / Week</div></div>
+        </div>
+        <div class="report-download-row">
+          <button type="button" class="download-report-btn" onclick="downloadAnalyticsPdf()">Download report as PDF</button>
+          <button type="button" class="download-report-btn download-report-btn--secondary" onclick="downloadAnalyticsExcel()">Download report as Excel</button>
+        </div>
+
+        <div class="chart-card" style="margin-bottom:20px;">
+          <h4>Complaints by Block / Building</h4>
+          <div class="bar-chart" style="margin-top:8px;">
+            <div class="bar-row"><span class="bar-label">Block A</span><div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--accent);"></div></div><span class="bar-val" style="color:var(--accent);">3</span></div>
+            <div class="bar-row"><span class="bar-label">Block B</span><div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--sky);"></div></div><span class="bar-val" style="color:var(--sky);">1</span></div>
+            <div class="bar-row"><span class="bar-label">Block C</span><div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--green);"></div></div><span class="bar-val" style="color:var(--green);">1</span></div>
+            <div class="bar-row"><span class="bar-label">Block D</span><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--muted);"></div></div><span class="bar-val" style="color:var(--muted);">0</span></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h4>Priority Breakdown</h4>
+          <div class="bar-chart" style="margin-top:8px;">
+            <div class="bar-row"><span class="bar-label">High Priority</span><div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--red);"></div></div><span class="bar-val" style="color:var(--red);">4</span></div>
+            <div class="bar-row"><span class="bar-label">Medium</span><div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--yellow);"></div></div><span class="bar-val" style="color:var(--yellow);">1</span></div>
+            <div class="bar-row"><span class="bar-label">Low</span><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--green);"></div></div><span class="bar-val" style="color:var(--muted);">0</span></div>
+          </div>
+        </div>
+
+        <div class="chart-card issue-trend-card">
+          <div class="issue-trend-head">
+            <h4>Most Reported Issue Type</h4>
+            <span class="issue-highlight-badge">Top: Water / Plumbing</span>
+          </div>
+          <p class="issue-trend-sub">Water / Plumbing complaints are currently highest and may need priority maintenance planning.</p>
+          <div class="bar-chart" style="margin-top:10px;">
+            <div class="bar-row"><span class="bar-label">Water / Plumbing</span><div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--accent);"></div></div><span class="bar-val" style="color:var(--accent);">4</span></div>
+            <div class="bar-row"><span class="bar-label">Electrical</span><div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--yellow);"></div></div><span class="bar-val" style="color:var(--yellow);">1</span></div>
+            <div class="bar-row"><span class="bar-label">Furniture</span><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--green);"></div></div><span class="bar-val" style="color:var(--muted);">0</span></div>
+            <div class="bar-row"><span class="bar-label">Network</span><div class="bar-track"><div class="bar-fill" style="width:0%;background:#a855f7;"></div></div><span class="bar-val" style="color:var(--muted);">0</span></div>
+            <div class="bar-row"><span class="bar-label">Other</span><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--muted);"></div></div><span class="bar-val" style="color:var(--muted);">0</span></div>
+          </div>
+        </div>
+      </div><!-- /tab-analytics -->
+
+      <!-- ─────────────── PROFILE TAB ─────────────── -->
+      <div id="tab-profile" class="tab-pane">
+        <h3 class="profile-page-title">Your profile</h3>
+        <p class="profile-page-sub">Update your display name and contact details. Changes are saved on this device only. Click your name in the sidebar anytime to open this page.</p>
+        <div class="profile-card">
+          <label class="profile-label" for="adm-pf-name">Full name</label>
+          <input type="text" id="adm-pf-name" class="profile-input" placeholder="e.g. Admin — Campus Operations" autocomplete="name">
+
+          <label class="profile-label" for="adm-pf-phone">Phone number</label>
+          <input type="tel" id="adm-pf-phone" class="profile-input" placeholder="e.g. +91 98765 43210" autocomplete="tel">
+
+          <label class="profile-label" for="adm-pf-role">Role / desk (optional)</label>
+          <input type="text" id="adm-pf-role" class="profile-input" placeholder="e.g. Estate &amp; maintenance coordinator">
+
+          <label class="profile-label" for="adm-pf-email">Email (optional)</label>
+          <input type="email" id="adm-pf-email" class="profile-input" placeholder="admin@niet.co.in" autocomplete="email">
+
+          <div class="profile-actions">
+            <button type="button" class="btn-submit profile-save-btn" onclick="saveAdminProfile()">Save changes</button>
+          </div>
+        </div>
+      </div><!-- /tab-profile -->
+
+      <!-- ─────────────── NOTIFICATIONS TAB ─────────────── -->
+      <div id="tab-notifications" class="tab-pane">
+        <div class="notif-toolbar">
+          <h3>System notifications</h3>
+          <button type="button" class="btn-mute" id="btn-mute-notif" onclick="toggleMuteNotifications()">Mute notifications</button>
+        </div>
+        <div class="notif-muted-banner" id="notif-muted-banner">You have muted notifications. You can turn them back on anytime.</div>
+        <div class="notif-list" id="admin-notif-list">
+          <div class="notif-item">
+            <div class="ni-dot" style="background:var(--accent);"></div>
+            <div>
+              <div class="ni-title">New complaint submitted — CMP-005</div>
+              <div class="ni-desc">Prof. Ramesh reported "Fan not working in classroom" in Block A, Room 101. Requires assignment.</div>
+              <div class="ni-time">Apr 3, 2026 · 8:28 AM</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="ni-dot" style="background:var(--yellow);"></div>
+            <div>
+              <div class="ni-title">Complaint CMP-003 Reopened by Faculty</div>
+              <div class="ni-desc">Prof. Ramesh reopened "Water leakage near classroom" — issue still persists after resolution.</div>
+              <div class="ni-time">Apr 1, 2026 · 5:12 PM</div>
+            </div>
+          </div>
+          <div class="notif-item" style="opacity:0.6;">
+            <div class="ni-dot" style="background:var(--green);"></div>
+            <div>
+              <div class="ni-title">Complaint CMP-004 Verified &amp; Closed</div>
+              <div class="ni-desc">Faculty verified resolution of "Water leakage near classroom". Complaint closed.</div>
+              <div class="ni-time">Apr 1, 2026 · 6:36 PM</div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /tab-notifications -->
+
+    </div><!-- /content-pad -->
+  </main>
+</div><!-- /app-layout -->
+
+<!-- ═══════════════════ MODALS ═══════════════════ -->
+
+<!-- Complaint Detail Modal -->
+<div id="detail-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h3 id="dm-title"></h3>
+    <p class="modal-sub" id="dm-id"></p>
+
+    <div class="detail-meta-grid">
+      <div class="meta-cell"><div class="mc-label">Status</div><div id="dm-status"></div></div>
+      <div class="meta-cell"><div class="mc-label">Priority</div><div id="dm-priority"></div></div>
+      <div class="meta-cell"><div class="mc-label">Category</div><div id="dm-cat" style="font-size:14px;font-weight:500;"></div></div>
+      <div class="meta-cell"><div class="mc-label">Location</div><div id="dm-loc" style="font-size:14px;font-weight:500;"></div></div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:8px;">Description</div>
+      <p id="dm-desc" style="font-size:14px;color:var(--muted);line-height:1.6;"></p>
+    </div>
+
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:12px;">Status Timeline</div>
+    <div id="dm-timeline" class="timeline-steps"></div>
+
+    <div class="modal-footer" id="dm-footer">
+      <button class="btn-sm btn-outline" onclick="closeModal('detail-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Update Status Modal -->
+<div id="update-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>Update Complaint Status</h3>
+    <p class="modal-sub" id="um-id"></p>
+    <div class="modal-form">
+      <div class="mf">
+        <label>New Status</label>
+        <select>
+          <option>IN_PROGRESS</option>
+          <option>UNDER_REVIEW</option>
+          <option>ASSIGNED</option>
+          <option>RESOLVED</option>
+        </select>
+      </div>
+      <div class="mf">
+        <label>Assigned Department</label>
+        <select>
+          <option value="">— Select Department —</option>
+          <option>Civil / Maintenance</option>
+          <option>Electrical Dept</option>
+          <option>IT / Network Dept</option>
+          <option>Housekeeping</option>
+          <option>Security Dept</option>
+          <option>Administration</option>
+        </select>
+      </div>
+      <div class="mf">
+        <label>Expected Resolution (Days)</label>
+        <input type="number" placeholder="e.g., 3" min="1">
+      </div>
+      <div class="mf">
+        <label>Admin Remark</label>
+        <textarea placeholder="Add notes for faculty about the current status…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeModal('update-modal')">Cancel</button>
+      <button class="btn-sm" style="background:var(--accent);color:white;border:none;" onclick="closeModal('update-modal');showToast('Status updated successfully!','success')">Save Update</button>
+    </div>
+  </div>
+</div>
+
+<!-- Resolve Modal -->
+<div id="resolve-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>Mark as Resolved</h3>
+    <p class="modal-sub" id="rm-id"></p>
+    <div class="modal-form">
+      <div class="mf">
+        <label>Resolution Remark</label>
+        <textarea placeholder="Describe how the issue was resolved…"></textarea>
+      </div>
+      <div class="mf">
+        <label>Actual Resolution Date</label>
+        <input type="date">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeModal('resolve-modal')">Cancel</button>
+      <button class="btn-sm" style="background:rgba(34,197,94,0.2);color:var(--green);border:none;" onclick="closeModal('resolve-modal');showToast('Complaint marked as resolved!','success')">✓ Mark Resolved</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delay Modal -->
+<div id="delay-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>Log a Delay</h3>
+    <p class="modal-sub" id="dlm-id"></p>
+    <div class="delay-warning">⚠️ Marking a delay will notify the faculty and update the complaint status to DELAYED.</div>
+    <div class="modal-form">
+      <div class="mf">
+        <label>Delay Reason</label>
+        <textarea placeholder="Explain why resolution is being delayed…"></textarea>
+      </div>
+      <div class="mf">
+        <label>New Expected Date</label>
+        <input type="date">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-outline" onclick="closeModal('delay-modal')">Cancel</button>
+      <button class="btn-sm" style="background:rgba(239,68,68,0.2);color:var(--red);border:none;" onclick="closeModal('delay-modal');showToast('Delay logged and faculty notified.','info')">Log Delay</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+/* ══════════════════════════════════════
+   TAB NAVIGATION
+══════════════════════════════════════ */
+const TAB_TITLES = {
+  dashboard:     'Admin Dashboard',
+  complaints:    'All Complaints',
+  pending:       'Pending Action',
+  analytics:     'Analytics',
+  notifications: 'Notifications',
+  profile:       'Profile',
+};
+
+const ADMIN_PROFILE_KEY = 'intell_niet_profile_admin';
+const ADMIN_NOTIF_MUTE_KEY = 'intell_niet_notif_mute_admin';
+
+function initialsFromName(name) {
+  const parts = (name || '').trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return '??';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function loadAdminProfile() {
+  try {
+    const raw = localStorage.getItem(ADMIN_PROFILE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function applyAdminProfileToUI() {
+  const p = loadAdminProfile();
+  const name = (p && p.name && p.name.trim()) || 'Administrator';
+  document.getElementById('sidebar-display-name').textContent = name;
+  document.getElementById('sidebar-avatar').textContent = initialsFromName(name);
+  document.getElementById('adm-pf-name').value = p && p.name ? p.name : '';
+  document.getElementById('adm-pf-phone').value = p && p.phone ? p.phone : '';
+  document.getElementById('adm-pf-role').value = p && p.role ? p.role : '';
+  document.getElementById('adm-pf-email').value = p && p.email ? p.email : '';
+}
+
+function saveAdminProfile() {
+  const data = {
+    name: document.getElementById('adm-pf-name').value.trim(),
+    phone: document.getElementById('adm-pf-phone').value.trim(),
+    role: document.getElementById('adm-pf-role').value.trim(),
+    email: document.getElementById('adm-pf-email').value.trim(),
+  };
+  if (!data.name) {
+    showToast('Please enter your name.', 'error');
+    return;
+  }
+  localStorage.setItem(ADMIN_PROFILE_KEY, JSON.stringify(data));
+  applyAdminProfileToUI();
+  showToast('Profile saved.', 'success');
+}
+
+function getAdminNotifMuted() {
+  return localStorage.getItem(ADMIN_NOTIF_MUTE_KEY) === '1';
+}
+
+function setAdminNotifMutedUI(muted) {
+  const list = document.getElementById('admin-notif-list');
+  const banner = document.getElementById('notif-muted-banner');
+  const btn = document.getElementById('btn-mute-notif');
+  const dot = document.getElementById('topbar-notif-dot');
+  if (list) list.classList.toggle('notif-muted', muted);
+  if (banner) banner.classList.toggle('show', muted);
+  if (btn) btn.textContent = muted ? 'Unmute notifications' : 'Mute notifications';
+  if (dot) dot.style.opacity = muted ? '0.25' : '';
+}
+
+function toggleMuteNotifications() {
+  const next = !getAdminNotifMuted();
+  localStorage.setItem(ADMIN_NOTIF_MUTE_KEY, next ? '1' : '0');
+  setAdminNotifMutedUI(next);
+  showToast(next ? 'Notifications muted.' : 'Notifications on.', 'info');
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  document.getElementById('tab-' + tab).classList.add('active');
+  const navEl = document.getElementById('nav-' + tab);
+  if (navEl) navEl.classList.add('active');
+  document.getElementById('topbar-title').textContent = TAB_TITLES[tab] || 'Dashboard';
+}
+
+/* ══════════════════════════════════════
+   SEARCH & FILTER
+══════════════════════════════════════ */
+function searchComplaints(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('#all-complaints-table tbody tr').forEach(row => {
+    const match = row.dataset.search.includes(q) || row.textContent.toLowerCase().includes(q);
+    row.style.display = match ? '' : 'none';
+  });
+}
+
+function filterByStatus(status) {
+  document.querySelectorAll('#all-complaints-table tbody tr').forEach(row => {
+    row.style.display = (status === 'all' || row.dataset.status === status) ? '' : 'none';
+  });
+}
+
+/* ══════════════════════════════════════
+   COMPLAINT DETAIL MODAL
+══════════════════════════════════════ */
+const STATUS_CLASS = {
+  IN_PROGRESS: 'b-progress', SUBMITTED: 'b-submitted', CLOSED: 'b-closed',
+  REOPENED: 'b-reopened',    RESOLVED: 'b-resolved',  DELAYED: 'b-delayed',
+};
+
+const PRI_CLASS = { HIGH: 'p-high', MEDIUM: 'p-medium', LOW: 'p-low' };
+
+/* Sample status histories keyed by complaint id */
+const HISTORIES = {
+  'CMP-001': [{s:'SUBMITTED',by:'Faculty',time:'Apr 1, 1:54 PM',r:'Complaint created'}],
+  'CMP-002': [{s:'SUBMITTED',by:'Faculty',time:'Apr 1, 3:02 PM',r:'Complaint created'}],
+  'CMP-003': [{s:'SUBMITTED',by:'Faculty',time:'Apr 1, 3:18 PM',r:'Complaint created'},{s:'IN_PROGRESS',by:'Admin',time:'Apr 1, 3:38 PM',r:'Assigned for inspection'},{s:'RESOLVED',by:'Admin',time:'Apr 1, 3:41 PM',r:'Issue repaired successfully'},{s:'REOPENED',by:'Faculty',time:'Apr 1, 5:12 PM',r:'Issue still exists.'}],
+  'CMP-004': [{s:'SUBMITTED',by:'Faculty',time:'Apr 1, 6:30 PM',r:'Complaint created'},{s:'IN_PROGRESS',by:'Admin',time:'Apr 1, 6:33 PM',r:'Assigned for inspection'},{s:'RESOLVED',by:'Admin',time:'Apr 1, 6:33 PM',r:'Issue repaired successfully'},{s:'CLOSED',by:'Faculty',time:'Apr 1, 6:36 PM',r:'Checked physically. Issue resolved.'}],
+  'CMP-005': [{s:'SUBMITTED',by:'Faculty',time:'Apr 3, 8:28 AM',r:'Complaint created'},{s:'IN_PROGRESS',by:'Admin',time:'Apr 3, 8:35 AM',r:'Assigned to maintenance team'}],
+};
+
+function openDetailModal(id, title, cat, status, priority, date, desc, block, floor, room) {
+  document.getElementById('dm-title').textContent    = title;
+  document.getElementById('dm-id').textContent       = id + ' · Reported ' + date;
+  document.getElementById('dm-status').innerHTML     = `<span class="badge ${STATUS_CLASS[status] || 'b-submitted'}">${status.replace(/_/g,' ')}</span>`;
+  document.getElementById('dm-priority').innerHTML   = `<span class="pri-dot ${PRI_CLASS[priority] || 'p-medium'}">${priority}</span>`;
+  document.getElementById('dm-cat').textContent      = cat;
+  document.getElementById('dm-loc').textContent      = `Block ${block}, Floor ${floor}, Room ${room}`;
+  document.getElementById('dm-desc').textContent     = desc;
+
+  const history = HISTORIES[id] || [];
+  const tl = document.getElementById('dm-timeline');
+  tl.innerHTML = '';
+  history.forEach((h, i) => {
+    const cls = i === history.length - 1 ? 'active' : 'done';
+    tl.innerHTML += `
+      <div class="tstep">
+        <div class="tstep-dot ${cls}">${i + 1}</div>
+        <div class="tstep-info">
+          <div class="ts-title">${h.s.replace(/_/g,' ')} <span style="font-size:11px;color:var(--muted);margin-left:8px;">by ${h.by}</span></div>
+          <div class="ts-time">${h.time}</div>
+          ${h.r ? `<div class="ts-remark">"${h.r}"</div>` : ''}
+        </div>
+      </div>`;
+  });
+
+  /* Add quick-action buttons in footer based on status */
+  const footer = document.getElementById('dm-footer');
+  footer.innerHTML = '<button class="btn-sm btn-outline" onclick="closeModal(\'detail-modal\')">Close</button>';
+
+  if (status === 'SUBMITTED' || status === 'REOPENED') {
+    footer.innerHTML += `<button class="btn-sm" style="background:var(--accent);color:white;border:none;" onclick="closeModal('detail-modal');openUpdateModal('${id}')">Update Status</button>`;
+  }
+  if (status === 'IN_PROGRESS') {
+    footer.innerHTML += `<button class="btn-sm" style="background:rgba(34,197,94,0.2);color:var(--green);border:none;" onclick="closeModal('detail-modal');openResolveModal('${id}')">Mark Resolved</button>`;
+    footer.innerHTML += `<button class="btn-sm" style="background:rgba(239,68,68,0.15);color:var(--red);border:none;" onclick="closeModal('detail-modal');openDelayModal('${id}')">Log Delay</button>`;
+  }
+
+  document.getElementById('detail-modal').classList.add('open');
+}
+
+/* ══════════════════════════════════════
+   UPDATE / RESOLVE / DELAY MODALS
+══════════════════════════════════════ */
+function openUpdateModal(id) {
+  document.getElementById('um-id').textContent = id;
+  document.getElementById('update-modal').classList.add('open');
+}
+
+function openResolveModal(id) {
+  document.getElementById('rm-id').textContent = id;
+  document.getElementById('resolve-modal').classList.add('open');
+}
+
+function openDelayModal(id) {
+  document.getElementById('dlm-id').textContent = id;
+  document.getElementById('delay-modal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+/* backdrop click */
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
+});
+
+/* ══════════════════════════════════════
+   LOGOUT
+══════════════════════════════════════ */
+function doLogout() {
+  showToast('Signed out successfully', 'info');
+  setTimeout(() => { window.location.href = 'login.html'; }, 700);
+}
+
+function openContact() {
+  window.open('https://www.niet.co.in/contact-us', '_blank', 'noopener,noreferrer');
+}
+
+function downloadAnalyticsPdf() {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    showToast('PDF library failed to load. Try again.', 'error');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const reportDate = new Date().toLocaleString();
+  const reportLines = [
+    'CampusTrack - Analytics Report',
+    `Generated on: ${reportDate}`,
+    '',
+    'Key Metrics',
+    '- Resolution Rate: 40%',
+    '- Avg Resolution Time: 2.1 days',
+    '- Complaints / Week: 4.2',
+    '',
+    'Complaints by Block / Building',
+    '- Block A: 3',
+    '- Block B: 1',
+    '- Block C: 1',
+    '- Block D: 0',
+    '',
+    'Priority Breakdown',
+    '- High Priority: 4',
+    '- Medium: 1',
+    '- Low: 0',
+    '',
+    'Most Reported Issue Type',
+    '- Top Issue Type: Water / Plumbing',
+    '- Water / Plumbing: 4',
+    '- Electrical: 1',
+    '- Furniture: 0',
+    '- Network: 0',
+    '- Other: 0',
+  ];
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.text('CampusTrack Analytics Report', 14, 18);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.text(`Generated on: ${reportDate}`, 14, 26);
+  doc.line(14, 30, 196, 30);
+
+  let y = 40;
+  reportLines.slice(3).forEach((line) => {
+    doc.text(line, 14, y);
+    y += 8;
+  });
+
+  doc.save('campustrack-analytics-report.pdf');
+  showToast('Analytics report downloaded as PDF.', 'success');
+}
+
+function downloadAnalyticsExcel() {
+  if (typeof XLSX === 'undefined') {
+    showToast('Excel export library failed to load. Refresh and try again.', 'error');
+    return;
+  }
+
+  const generated = new Date().toLocaleString();
+  const wb = XLSX.utils.book_new();
+
+  const summary = [
+    ['Intelli-NIET — analytics report'],
+    ['Generated', generated],
+    [],
+    ['Metric', 'Value'],
+    ['Total complaints', 5],
+    ['Resolution rate', '40%'],
+    ['Average resolution time', '2.1 days'],
+    ['Complaints per week', 4.2],
+    ['Pending action (admin view)', 3],
+    ['Resolved (sample set)', 2],
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summary), 'Summary');
+
+  const byType = [
+    ['Complaint type / category', 'Count', 'Share of total'],
+    ['Water / plumbing', 4, '80%'],
+    ['Electrical', 1, '20%'],
+    ['Furniture', 0, '0%'],
+    ['Network', 0, '0%'],
+    ['Other', 0, '0%'],
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(byType), 'Complaint types');
+
+  const byStatus = [
+    ['Status', 'Count', 'Notes'],
+    ['Submitted', 2, 'Awaiting assignment'],
+    ['In progress', 1, 'Work ongoing'],
+    ['Resolved', 0, 'Awaiting faculty verification'],
+    ['Closed', 1, 'Verified complete'],
+    ['Reopened', 1, 'Needs follow-up'],
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(byStatus), 'Status overview');
+
+  const inProgress = [
+    ['ID', 'Title', 'Category', 'Reporter', 'Last update'],
+    ['CMP-005', 'Fan not working in classroom', 'Electrical', 'Prof. Ramesh', 'Apr 3, 2026 — assigned to maintenance'],
+    ['CMP-003', 'Water leakage near classroom', 'Water', 'Prof. Ramesh', 'Apr 1, 2026 — reopened by faculty'],
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(inProgress), 'In progress');
+
+  const resolvedClosed = [
+    ['ID', 'Title', 'Category', 'Outcome', 'Closed / resolved on'],
+    ['CMP-004', 'Water leakage near classroom', 'Water', 'Verified & closed', 'Apr 1, 2026'],
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(resolvedClosed), 'Resolved & closed');
+
+  const byBlock = [
+    ['Block / building', 'Complaint count'],
+    ['Block A', 3],
+    ['Block B', 1],
+    ['Block C', 1],
+    ['Block D', 0],
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(byBlock), 'By block');
+
+  const priority = [
+    ['Priority', 'Count'],
+    ['High', 4],
+    ['Medium', 1],
+    ['Low', 0],
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(priority), 'Priority');
+
+  XLSX.writeFile(wb, 'intell-niet-analytics-report.xlsx');
+  showToast('Excel report downloaded.', 'success');
+}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+function showToast(msg, type = 'info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* Escape key */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyAdminProfileToUI();
+  setAdminNotifMutedUI(getAdminNotifMuted());
+});
+</script>
+
+</body>
+</html>

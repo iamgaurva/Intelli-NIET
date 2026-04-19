@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intelli-NIET— Login</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+  <!-- ===== LOGIN PAGE ===== -->
+  <div class="login-page">
+    <div class="login-grid">
+
+      <!-- LEFT: Brand Panel -->
+      <div class="login-brand">
+        <div>
+          <div class="brand-logo">
+            <div class="brand-icon">
+              <img src="NIET_Logo.png" alt="Logo">
+            </div>
+            <div>
+              <div class="brand-name">Intelli-NIET</div>
+              <div class="brand-sub">Issue Management System</div>
+            </div>
+          </div>
+
+          <div class="brand-hero">
+            <h2>Resolve campus issues <span>faster than ever.</span></h2>
+            <p>A unified platform for faculty to report and admins to resolve infrastructure, maintenance, and facility
+              issues across campus.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Login Form -->
+      <div class="login-form-box">
+        <h3>Welcome back</h3>
+        <p class="sub">Sign in to your account to continue</p>
+
+        <!-- Role Selector -->
+        <div class="role-tabs">
+          <button class="role-tab active" id="tab-faculty" onclick="setRole('faculty')">Faculty</button>
+          <button class="role-tab" id="tab-admin" onclick="setRole('admin')">Admin</button>
+        </div>
+
+        <!-- Error Banner -->
+        <div class="error-msg" id="error-msg">Invalid username or password. Please try again.</div>
+
+        <!-- Fields -->
+        <div class="field">
+          <label>Username</label>
+          <input type="text" id="login-user" placeholder="Enter your username" autocomplete="username">
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="login-pass" placeholder="Enter your password" autocomplete="current-password"
+            onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+
+        <a class="forgot" onclick="openForgotModal()">Forgot password?</a>
+
+        <button class="btn-login" onclick="doLogin()">Sign In →</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== FORGOT PASSWORD MODAL ===== -->
+  <div id="fp-modal" class="fp-modal">
+    <div class="fp-box">
+      <h4>Reset Password</h4>
+      <p>Enter your registered email address and we'll send a password reset link to your inbox.</p>
+      <input type="email" id="fp-email" placeholder="your.email@college.edu">
+      <div class="fp-actions">
+        <button class="btn-sm btn-outline" onclick="closeForgotModal()">Cancel</button>
+        <button class="btn-sm btn-primary-sm" onclick="sendReset()">Send Reset Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    /* ── Role Selection ── */
+    let currentRole = 'faculty';
+
+    function setRole(role) {
+      currentRole = role;
+      document.getElementById('tab-faculty').classList.toggle('active', role === 'faculty');
+      document.getElementById('tab-admin').classList.toggle('active', role === 'admin');
+      hideError();
+    }
+
+    /* ── Login Logic ── */
+    function doLogin() {
+      const user = document.getElementById('login-user').value.trim();
+      const pass = document.getElementById('login-pass').value.trim();
+
+      if (!user || !pass) {
+        showError('Please enter both username and password.');
+        return;
+      }
+
+      /* 
+        In production, replace this with a real API call:
+        POST /api/auth/login  { username, password }
+        → response: { token, role }
+        Then store token in sessionStorage and redirect.
+  
+        Demo credentials:
+          Faculty  → any username + any password
+          Admin    → any username + any password
+      */
+
+      hideError();
+      showToast('Signing in…', 'info');
+
+      setTimeout(() => {
+        if (currentRole === 'admin') {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'faculty.html';
+        }
+      }, 700);
+    }
+
+    /* ── Forgot Password Modal ── */
+    function openForgotModal() {
+      document.getElementById('fp-modal').classList.add('open');
+    }
+
+    function closeForgotModal() {
+      document.getElementById('fp-modal').classList.remove('open');
+    }
+
+    function sendReset() {
+      const email = document.getElementById('fp-email').value.trim();
+      if (!email) { showToast('Please enter your email address.', 'error'); return; }
+      closeForgotModal();
+      showToast('Reset link sent to ' + email, 'success');
+    }
+
+    /* ── Helpers ── */
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+
+    function hideError() {
+      document.getElementById('error-msg').classList.remove('show');
+    }
+
+    function showToast(msg, type = 'info') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + type + ' show';
+      setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
+    /* ── Close modal on backdrop click / Escape ── */
+    document.getElementById('fp-modal').addEventListener('click', function (e) {
+      if (e.target === this) closeForgotModal();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeForgotModal();
+    });
+  </script>
+
+</body>
+
+</html>

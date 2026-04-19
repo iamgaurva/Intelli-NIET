@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intelli-NIET — Faculty Dashboard</title>
+  <link rel="stylesheet" href="faculty.css">
+</head>
+
+<body>
+
+  <div class="app-layout">
+
+    <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="container">
+          <img src="NIET_Logo.png" alt="logo">
+          <div class="text">
+            <div class="niet">Intelli-NIET</div>
+            <p>Faculty Portal</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-user sidebar-user--clickable" role="button" tabindex="0" title="Edit profile" onclick="switchTab('profile')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab('profile');}">
+        <div class="user-avatar" id="sidebar-avatar">PR</div>
+        <div class="user-info">
+          <div class="name" id="sidebar-display-name">Prof. Ramesh</div>
+          <span class="role-badge role-faculty">Faculty</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-label">Main</div>
+
+          <button class="nav-item active" id="nav-home" onclick="switchTab('home')">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+            </svg>
+            Overview
+          </button>
+
+          <button class="nav-item" id="nav-report" onclick="switchTab('report')">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L21 10l-9 7z" />
+            </svg>
+            Report Issue
+          </button>
+
+          <button class="nav-item" id="nav-complaints" onclick="switchTab('complaints')">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+            </svg>
+            My Complaints
+          </button>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Activity</div>
+          <button class="nav-item" id="nav-notifications" onclick="switchTab('notifications')">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+            </svg>
+            Notifications
+            <span class="nav-badge">3</span>
+          </button>
+        </div>
+      </nav>
+
+      <div class="sidebar-contact">
+        <button class="btn-contact" onclick="openContact()">Contact Us</button>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+    <main class="main-content">
+
+      <div class="topbar">
+        <div class="topbar-title" id="topbar-title">Dashboard Overview</div>
+        <div class="topbar-actions">
+          <div class="notif-btn" onclick="switchTab('notifications')" title="Notifications">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+            </svg>
+            <div class="notif-dot" id="topbar-notif-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-pad">
+
+        <!-- ─────────────── HOME TAB ─────────────── -->
+        <div id="tab-home" class="tab-pane active">
+
+          <div class="welcome-banner">
+            <h2>Good morning, <span id="welcome-display-name">Prof. Ramesh</span> 👋</h2>
+            <p>You have 2 pending complaints awaiting resolution. Track all your reported issues from the complaints
+              section.</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="sc-icon ic-blue">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+                </svg>
+              </div>
+              <div class="sc-num">5</div>
+              <div class="sc-lbl">Total Complaints</div>
+            </div>
+            <div class="stat-card">
+              <div class="sc-icon ic-yellow">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+              </div>
+              <div class="sc-num">2</div>
+              <div class="sc-lbl">In Progress</div>
+            </div>
+            <div class="stat-card">
+              <div class="sc-icon ic-green">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                </svg>
+              </div>
+              <div class="sc-num">2</div>
+              <div class="sc-lbl">Resolved</div>
+            </div>
+            <div class="stat-card">
+              <div class="sc-icon ic-orange">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                </svg>
+              </div>
+              <div class="sc-num">1</div>
+              <div class="sc-lbl">Reopened</div>
+            </div>
+          </div>
+
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+            <div class="section-hdr">
+              <h4>Recent Activity</h4>
+              <button class="filter-btn" onclick="switchTab('complaints')">View All →</button>
+            </div>
+            <table class="complaint-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th>Priority</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  onclick="openComplaintDetail({id:'CMP-005',title:'Fan not working in classroom',cat:'Electrical',status:'IN_PROGRESS',priority:'HIGH',date:'Apr 3, 2026',desc:'The ceiling fan is not working in Block A room 101.',block:'A',floor:'1st',room:'101',history:[{s:'SUBMITTED',by:'Faculty',time:'Apr 3, 8:28 AM',r:'Complaint created'},{s:'IN_PROGRESS',by:'Admin',time:'Apr 3, 8:35 AM',r:'Assigned to maintenance team'}]})">
+                  <td style="color:var(--muted);font-size:12px;">CMP-005</td>
+                  <td>Fan not working in classroom</td>
+                  <td style="color:var(--muted);">Electrical</td>
+                  <td><span class="badge b-progress">IN PROGRESS</span></td>
+                  <td><span class="pri-dot p-high">High</span></td>
+                  <td style="color:var(--muted);font-size:13px;">Apr 3, 2026</td>
+                </tr>
+                <tr
+                  onclick="openComplaintDetail({id:'CMP-004',title:'Water leakage near classroom',cat:'Water',status:'CLOSED',priority:'HIGH',date:'Apr 1, 2026',desc:'Water leakage near classroom entrance.',block:'B',floor:'Ground',room:'102',history:[{s:'SUBMITTED',by:'Faculty',time:'Apr 1, 6:30 PM',r:'Complaint created'},{s:'IN_PROGRESS',by:'Admin',time:'Apr 1, 6:33 PM',r:'Assigned for inspection'},{s:'RESOLVED',by:'Admin',time:'Apr 1, 6:33 PM',r:'Issue repaired successfully'},{s:'CLOSED',by:'Faculty',time:'Apr 1, 6:36 PM',r:'Checked physically. Issue resolved.'}]})">
+                  <td style="color:var(--muted);font-size:12px;">CMP-004</td>
+                  <td>Water leakage near classroom</td>
+                  <td style="color:var(--muted);">Water / Plumbing</td>
+                  <td><span class="badge b-closed">CLOSED</span></td>
+                  <td><span class="pri-dot p-high">High</span></td>
+                  <td style="color:var(--muted);font-size:13px;">Apr 1, 2026</td>
+                </tr>
+                <tr
+                  onclick="openComplaintDetail({id:'CMP-003',title:'Water leakage near classroom',cat:'Water',status:'REOPENED',priority:'HIGH',date:'Apr 1, 2026',desc:'Water leakage near classroom entrance.',block:'C',floor:'2nd',room:'205',history:[{s:'SUBMITTED',by:'Faculty',time:'Apr 1, 3:18 PM',r:'Complaint created'},{s:'IN_PROGRESS',by:'Admin',time:'Apr 1, 3:38 PM',r:'Assigned for inspection'},{s:'RESOLVED',by:'Admin',time:'Apr 1, 3:41 PM',r:'Issue repaired successfully'},{s:'CLOSED',by:'Admin',time:'Apr 1, 5:12 PM',r:'Checked physically. Issue resolved.'},{s:'REOPENED',by:'Faculty',time:'Apr 1, 5:12 PM',r:'Issue still exists.'}]})">
+                  <td style="color:var(--muted);font-size:12px;">CMP-003</td>
+                  <td>Water leakage near classroom</td>
+                  <td style="color:var(--muted);">Water / Plumbing</td>
+                  <td><span class="badge b-reopened">REOPENED</span></td>
+                  <td><span class="pri-dot p-high">High</span></td>
+                  <td style="color:var(--muted);font-size:13px;">Apr 1, 2026</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div><!-- /tab-home -->
+
+        <!-- ─────────────── REPORT ISSUE TAB ─────────────── -->
+        <div id="tab-report" class="tab-pane">
+          <div class="report-card">
+            <h3>Report a New Issue</h3>
+            <p class="desc">Describe the campus issue and our maintenance team will resolve it promptly.</p>
+
+            <div class="form-grid">
+              <div class="form-field span2">
+                <label>Issue Title</label>
+                <input type="text" id="f-title" placeholder="Brief title e.g. Water leakage near Lab 3">
+              </div>
+
+              <div class="form-field">
+                <label>Issue Category</label>
+                <select id="issue-category" onchange="checkCustomCat()">
+                  <option value="">— Select category —</option>
+                  <option value="water">💧 Water / Plumbing</option>
+                  <option value="electrical">⚡ Electrical / Power</option>
+                  <option value="furniture">🪑 Furniture / Fixtures</option>
+                  <option value="ac">❄️ Air Conditioning / Fan</option>
+                  <option value="network">🌐 Network / Internet</option>
+                  <option value="projector">📽️ Projector / Mic</option>
+                  <option value="cleaning">🧹 Cleanliness / Sanitation</option>
+                  <option value="security">🔒 Security / Lock Issue</option>
+                  <option value="pest">🐛 Pest / Infestation</option>
+                  <option value="structural">🏗️ Structural / Civil</option>
+                  <option value="fire">🔥 Fire Safety Equipment</option>
+                  <option value="other">➕ Other (Specify)</option>
+                </select>
+              </div>
+
+              <div class="form-field" id="custom-cat-field" style="display:none;">
+                <label>Custom Category</label>
+                <input type="text" placeholder="Specify the issue category">
+              </div>
+
+              <div class="form-field span2">
+                <label>Description</label>
+                <textarea id="f-desc"
+                  placeholder="Describe the issue in detail — what happened, since when, how severe…"></textarea>
+              </div>
+
+              <div class="form-field span2">
+                <label>Priority Level</label>
+                <div class="priority-btns">
+                  <button class="pri-btn low" onclick="setPriority(this,'low')">🟢 Low</button>
+                  <button class="pri-btn medium sel" onclick="setPriority(this,'medium')">🟡 Medium</button>
+                  <button class="pri-btn high" onclick="setPriority(this,'high')">🔴 High</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="section-divider" style="margin-top:28px;">📍 Location Details</div>
+            <div class="location-grid">
+              <div class="form-field">
+                <label>Block / Building</label>
+                <select>
+                  <option value="">Select Block/Area</option>
+                  <option>Block A</option>
+                  <option>Block B</option>
+                  <option>Block C</option>
+                  <option>Block D</option>
+                  <option>Block E</option>
+                  <option>Library Area</option>
+                  <option>Sports Complex</option>
+                  <option>Parking Area (Gate no 2)</option>
+                  <option>Parking Area (Gate no 3)</option>
+                  <option>Boys Hostel </option>
+                  <option>Girls Hostel</option>
+                  <option>Cafeteria</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Floor</label>
+                <select>
+                  <option value="">Select Floor</option>
+                  <option>Ground Floor</option>
+                  <option>1st Floor</option>
+                  <option>2nd Floor</option>
+                  <option>3rd Floor</option>
+                  <option>4th Floor</option>
+                  <option>5th Floor</option>
+                  <option>6th Floor</option>
+                  <option>7th Floor</option>
+                  <option>Terrace</option>
+                  <option>Basement</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Room / Area No.</label>
+                <input type="text" placeholder="e.g., 101, Lab-3, Corridor">
+              </div>
+            </div>
+            <div class="location-grid2">
+              <div class="form-field">
+                <label>Area Type</label>
+                <select>
+                  <option value="">Select Area Type</option>
+                  <option>Classroom</option>
+                  <option>Laboratory</option>
+                  <option>Library</option>
+                  <option>Washroom</option>
+                  <option>Corridor</option>
+                  <option>Office</option>
+                  <option>Staircase</option>
+                  <option>Parking</option>
+                  <option>Cafeteria</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Landmark / Extra Info</label>
+                <input type="text" placeholder="Near main entrance, beside lab door…">
+              </div>
+            </div>
+
+            <!-- Image upload -->
+            <div class="section-divider" style="margin-top:28px;">📷 Attach Evidence</div>
+            <div class="image-upload-section">
+              <div class="img-options">
+                <div class="img-opt" onclick="document.getElementById('file-upload').click()">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                  </svg>
+                  <div class="opt-title">Upload from Device</div>
+                  <div class="opt-sub">JPG, PNG, HEIF up to 10 MB</div>
+                </div>
+                <div class="img-opt" onclick="startCamera()">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M12 15.2A3.2 3.2 0 1 0 12 8.8a3.2 3.2 0 0 0 0 6.4zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9z" />
+                  </svg>
+                  <div class="opt-title">Capture Live Photo</div>
+                  <div class="opt-sub">Use your device camera directly</div>
+                </div>
+              </div>
+
+              <input type="file" id="file-upload" accept="image/*" multiple onchange="handleFileUpload(event)">
+              <video id="camera-feed" class="camera-stream" autoplay muted></video>
+              <div class="camera-controls" id="camera-controls" style="display:none;">
+                <button class="btn-sm" style="background:var(--accent);color:white;border:none;"
+                  onclick="capturePhoto()">📸 Capture</button>
+                <button class="btn-sm btn-outline" onclick="stopCamera()">✕ Stop Camera</button>
+              </div>
+              <canvas id="snap-canvas" style="display:none;"></canvas>
+              <div class="preview-grid" id="preview-grid"></div>
+            </div>
+
+            <div class="form-footer">
+              <button class="btn-reset" onclick="resetForm()">Reset Form</button>
+              <button class="btn-submit" onclick="submitComplaint()">Submit Complaint →</button>
+            </div>
+          </div>
+        </div><!-- /tab-report -->
+
+        <!-- ─────────────── MY COMPLAINTS TAB ─────────────── -->
+        <div id="tab-complaints" class="tab-pane">
+          <div class="complaints-header">
+            <h3 style="font-size:20px;font-weight:700;">My Complaints</h3>
+            <button class="btn-submit" style="padding:10px 20px;font-size:14px;" onclick="switchTab('report')">+ New
+              Complaint</button>
+          </div>
+
+          <div class="filter-row" style="margin-bottom:20px;">
+            <button class="filter-btn active" onclick="filterComplaints(this,'all')">All (5)</button>
+            <button class="filter-btn" onclick="filterComplaints(this,'submitted')">Submitted</button>
+            <button class="filter-btn" onclick="filterComplaints(this,'progress')">In Progress</button>
+            <button class="filter-btn" onclick="filterComplaints(this,'resolved')">Resolved</button>
+            <button class="filter-btn" onclick="filterComplaints(this,'closed')">Closed</button>
+            <button class="filter-btn" onclick="filterComplaints(this,'reopened')">Reopened</button>
+          </div>
+
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+            <table class="complaint-table" id="f-complaints-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                  <th>Priority</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-status="progress">
+                  <td style="color:var(--muted);font-size:12px;">CMP-005</td>
+                  <td>Fan not working in classroom</td>
+                  <td style="color:var(--muted);">Electrical</td>
+                  <td style="font-size:12px;color:var(--muted);">Block A, R-101</td>
+                  <td><span class="badge b-progress">IN PROGRESS</span></td>
+                  <td><span class="pri-dot p-high">High</span></td>
+                  <td style="color:var(--muted);font-size:13px;">Apr 3</td>
+                  <td><button class="action-btn ab-view"
+                      onclick="event.stopPropagation();openComplaintDetail({id:'CMP-005',title:'Fan not working in classroom',cat:'Electrical',status:'IN_PROGRESS',priority:'HIGH',date:'Apr 3, 2026',desc:'The ceiling fan is not working in Block A room 101.',block:'A',floor:'1st',room:'101',history:[{s:'SUBMITTED',by:'Faculty',time:'Apr 3, 8:28 AM',r:'Complaint created'},{s:'IN_PROGRESS',by:'Admin',time:'Apr 3, 8:35 AM',r:'Assigned to maintenance team'}]})">View</button>
+                  </td>
+                </tr>
+                <tr data-status="closed">
+                  <td style="color:var(--muted);font-size:12px;">CMP-004</td>
+                  <td>Water leakage near classroom</td>
+                  <td style="color:var(--muted);">Water</td>
+                  <td style="font-size:12px;color:var(--muted);">Block B, R-102</td>
+                  <td><span class="badge b-closed">CLOSED</span></td>
+                  <td><span class="pri-dot p-high">High</span></td>
+                  <td style="color:var(--muted);font-size:13px;">Apr 1</td>
+                  <td><button class="action-btn ab-view"
+                      onclick="event.stopPropagation();openComplaintDetail({id:'CMP-004',title:'Water leakage near classroom',cat:'Water',status:'RESOLVED',priority:'HIGH',date:'Apr 1, 2026',desc:'Water leakage near classroom entrance.',block:'B',floor:'Ground',room:'102',history:[{s:'SUBMITTED',by:'Faculty',time:'Apr 1, 6:30 PM',r:'Complaint created'},{s:'RESOLVED',by:'Admin',time:'Apr 1, 6:33 PM',r:'Issue repaired successfully'}]})">View</button>
+                  </td>
+                </tr>
+                <tr data-status="reopened">
+                  <td style="color:var(--muted);font-size:12px;">CMP-003</td>
+                  <td>Water leakage near classroom</td>
+                  <td style="color:var(--muted);">Water</td>
+                  <td style="font-size:12px;color:var(--muted);">Block C, R-205</td>
+                  <td><span class="badge b-reopened">REOPENED</span></td>
+                  <td><span class="pri-dot p-high">High</span></td>
+                  <td style="color:var(--muted);font-size:13px;">Apr 1</td>
+                  <td><button class="action-btn ab-view"
+                      onclick="event.stopPropagation();openComplaintDetail({id:'CMP-003',title:'Water leakage near classroom',cat:'Water',status:'REOPENED',priority:'HIGH',date:'Apr 1, 2026',desc:'Water leakage near classroom entrance.',block:'C',floor:'2nd',room:'205',history:[{s:'SUBMITTED',by:'Faculty',time:'Apr 1, 3:18 PM',r:'Complaint created'},{s:'IN_PROGRESS',by:'Admin',time:'Apr 1, 3:38 PM',r:'Assigned for inspection'},{s:'RESOLVED',by:'Admin',time:'Apr 1, 3:41 PM',r:'Issue repaired successfully'},{s:'REOPENED',by:'Faculty',time:'Apr 1, 5:12 PM',r:'Issue still exists.'}]})">View</button>
+                  </td>
+                </tr>
+                <tr data-status="submitted">
+                  <td style="color:var(--muted);font-size:12px;">CMP-002</td>
+                  <td>Water leakage near classroom</td>
+                  <td style="color:var(--muted);">Water</td>
+                  <td style="font-size:12px;color:var(--muted);">Block A, R-101</td>
+                  <td><span class="badge b-submitted">SUBMITTED</span></td>
+                  <td><span class="pri-dot p-high">High</span></td>
+                  <td style="color:var(--muted);font-size:13px;">Apr 1</td>
+                  <td><button class="action-btn ab-view">View</button></td>
+                </tr>
+                <tr data-status="submitted">
+                  <td style="color:var(--muted);font-size:12px;">CMP-001</td>
+                  <td>Water leakage in lab</td>
+                  <td style="color:var(--muted);">Water</td>
+                  <td style="font-size:12px;color:var(--muted);">Block A, Lab-1</td>
+                  <td><span class="badge b-submitted">SUBMITTED</span></td>
+                  <td><span class="pri-dot p-medium">Medium</span></td>
+                  <td style="color:var(--muted);font-size:13px;">Apr 1</td>
+                  <td><button class="action-btn ab-view">View</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div><!-- /tab-complaints -->
+
+        <!-- ─────────────── PROFILE TAB ─────────────── -->
+        <div id="tab-profile" class="tab-pane">
+          <h3 class="profile-page-title">Your profile</h3>
+          <p class="profile-page-sub">Update how your name and contact details appear in the portal. Changes are saved on this device only. Click your name in the sidebar anytime to open this page.</p>
+          <div class="profile-card">
+            <label class="profile-label" for="pf-name">Full name</label>
+            <input type="text" id="pf-name" class="profile-input" placeholder="e.g. Prof. Ramesh Kumar" autocomplete="name">
+
+            <label class="profile-label" for="pf-phone">Phone number</label>
+            <input type="tel" id="pf-phone" class="profile-input" placeholder="e.g. +91 98765 43210" autocomplete="tel">
+
+            <label class="profile-label" for="pf-dept">Department</label>
+            <input type="text" id="pf-dept" class="profile-input" placeholder="e.g. Computer Science &amp; Engineering">
+
+            <label class="profile-label" for="pf-email">Email (optional)</label>
+            <input type="email" id="pf-email" class="profile-input" placeholder="name@niet.co.in" autocomplete="email">
+
+            <div class="profile-actions">
+              <button type="button" class="btn-submit profile-save-btn" onclick="saveFacultyProfile()">Save changes</button>
+            </div>
+          </div>
+        </div><!-- /tab-profile -->
+
+        <!-- ─────────────── NOTIFICATIONS TAB ─────────────── -->
+        <div id="tab-notifications" class="tab-pane">
+          <div class="notif-toolbar">
+            <h3>Notifications</h3>
+            <button type="button" class="btn-mute" id="btn-mute-notif" onclick="toggleMuteNotifications()">Mute notifications</button>
+          </div>
+          <div class="notif-muted-banner" id="notif-muted-banner">You have muted notifications. You can turn them back on anytime.</div>
+          <div class="notif-list" id="faculty-notif-list">
+            <div class="notif-item">
+              <div class="ni-dot" style="background:var(--yellow);"></div>
+              <div>
+                <div class="ni-title">Complaint CMP-005 Assigned to Maintenance</div>
+                <div class="ni-desc">Your complaint about "Fan not working in classroom" has been assigned to the
+                  maintenance team.</div>
+                <div class="ni-time">Apr 3, 2026 · 8:35 AM</div>
+              </div>
+            </div>
+            <div class="notif-item">
+              <div class="ni-dot" style="background:var(--accent);"></div>
+              <div>
+                <div class="ni-title">Complaint CMP-003 Reopened</div>
+                <div class="ni-desc">Complaint "Water leakage near classroom" was reopened. Our team will revisit the
+                  issue.</div>
+                <div class="ni-time">Apr 1, 2026 · 5:12 PM</div>
+              </div>
+            </div>
+            <div class="notif-item">
+              <div class="ni-dot" style="background:var(--green);"></div>
+              <div>
+                <div class="ni-title">Complaint CMP-004 Resolved &amp; Closed</div>
+                <div class="ni-desc">Your complaint "Water leakage near classroom" has been verified and closed
+                  successfully.</div>
+                <div class="ni-time">Apr 1, 2026 · 6:36 PM</div>
+              </div>
+            </div>
+            <div class="notif-item" style="opacity:0.5;">
+              <div class="ni-dot" style="background:var(--muted);"></div>
+              <div>
+                <div class="ni-title">Welcome to CampusTrack</div>
+                <div class="ni-desc">Your account has been activated. You can now start reporting campus issues.</div>
+                <div class="ni-time">Mar 30, 2026 · 10:00 AM</div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /tab-notifications -->
+
+      </div><!-- /content-pad -->
+    </main>
+  </div><!-- /app-layout -->
+
+  <!-- ═══════════════════ COMPLAINT DETAIL MODAL ═══════════════════ -->
+  <div id="complaint-detail-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 id="cd-title">Complaint Details</h3>
+      <p class="modal-sub" id="cd-id"></p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+        <div style="background:var(--card);border-radius:10px;padding:14px;">
+          <div
+            style="font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px;">
+            Status</div>
+          <div id="cd-status"></div>
+        </div>
+        <div style="background:var(--card);border-radius:10px;padding:14px;">
+          <div
+            style="font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px;">
+            Priority</div>
+          <div id="cd-priority"></div>
+        </div>
+        <div style="background:var(--card);border-radius:10px;padding:14px;">
+          <div
+            style="font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px;">
+            Category</div>
+          <div id="cd-cat" style="font-size:14px;font-weight:500;"></div>
+        </div>
+        <div style="background:var(--card);border-radius:10px;padding:14px;">
+          <div
+            style="font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px;">
+            Location</div>
+          <div id="cd-loc" style="font-size:14px;font-weight:500;"></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:8px;">
+          Description</div>
+        <p id="cd-desc" style="font-size:14px;color:var(--muted);line-height:1.6;"></p>
+      </div>
+
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:12px;">
+        Status Timeline</div>
+      <div id="cd-timeline" class="timeline-steps"></div>
+
+      <!-- Verify / Reopen section (only shown when RESOLVED) -->
+      <div id="cd-reopen-section"
+        style="display:none;margin-top:16px;padding:16px;background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.2);border-radius:10px;">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">This complaint is marked resolved. Verify and
+          close, or reopen if the issue persists.</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-sm" style="background:rgba(34,197,94,0.2);color:var(--green);border:none;"
+            onclick="closeModal('complaint-detail-modal');showToast('Complaint verified and closed!','success')">✓
+            Verify &amp; Close</button>
+          <button class="btn-sm" style="background:rgba(249,115,22,0.15);color:var(--accent);border:none;"
+            onclick="closeModal('complaint-detail-modal');showToast('Complaint reopened.','info')">↺ Reopen</button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-sm btn-outline" onclick="closeModal('complaint-detail-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    /* ══════════════════════════════════════
+       TAB NAVIGATION
+    ══════════════════════════════════════ */
+    const TAB_TITLES = {
+      home: 'Dashboard Overview',
+      report: 'Report New Issue',
+      complaints: 'My Complaints',
+      notifications: 'Notifications',
+      profile: 'Profile',
+    };
+
+    const PROFILE_STORAGE_KEY = 'intell_niet_profile_faculty';
+    const NOTIF_MUTE_KEY = 'intell_niet_notif_mute_faculty';
+
+    function initialsFromName(name) {
+      const parts = (name || '').trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return '??';
+      if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+
+    function loadFacultyProfile() {
+      try {
+        const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function applyFacultyProfileToUI() {
+      const p = loadFacultyProfile();
+      const name = (p && p.name && p.name.trim()) || 'Prof. Ramesh';
+      document.getElementById('sidebar-display-name').textContent = name;
+      document.getElementById('welcome-display-name').textContent = name;
+      document.getElementById('sidebar-avatar').textContent = initialsFromName(name);
+      document.getElementById('pf-name').value = p && p.name ? p.name : '';
+      document.getElementById('pf-phone').value = p && p.phone ? p.phone : '';
+      document.getElementById('pf-dept').value = p && p.dept ? p.dept : '';
+      document.getElementById('pf-email').value = p && p.email ? p.email : '';
+    }
+
+    function saveFacultyProfile() {
+      const data = {
+        name: document.getElementById('pf-name').value.trim(),
+        phone: document.getElementById('pf-phone').value.trim(),
+        dept: document.getElementById('pf-dept').value.trim(),
+        email: document.getElementById('pf-email').value.trim(),
+      };
+      if (!data.name) {
+        showToast('Please enter your name.', 'error');
+        return;
+      }
+      localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(data));
+      applyFacultyProfileToUI();
+      showToast('Profile saved.', 'success');
+    }
+
+    function getNotifMuted() {
+      return localStorage.getItem(NOTIF_MUTE_KEY) === '1';
+    }
+
+    function setNotifMutedUI(muted) {
+      const list = document.getElementById('faculty-notif-list');
+      const banner = document.getElementById('notif-muted-banner');
+      const btn = document.getElementById('btn-mute-notif');
+      const dot = document.getElementById('topbar-notif-dot');
+      if (list) list.classList.toggle('notif-muted', muted);
+      if (banner) banner.classList.toggle('show', muted);
+      if (btn) btn.textContent = muted ? 'Unmute notifications' : 'Mute notifications';
+      if (dot) dot.style.opacity = muted ? '0.25' : '';
+    }
+
+    function toggleMuteNotifications() {
+      const next = !getNotifMuted();
+      localStorage.setItem(NOTIF_MUTE_KEY, next ? '1' : '0');
+      setNotifMutedUI(next);
+      showToast(next ? 'Notifications muted.' : 'Notifications on.', 'info');
+    }
+
+    function switchTab(tab) {
+      // hide all panes & deactivate all nav items
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+      document.getElementById('tab-' + tab).classList.add('active');
+      const navEl = document.getElementById('nav-' + tab);
+      if (navEl) navEl.classList.add('active');
+      document.getElementById('topbar-title').textContent = TAB_TITLES[tab] || 'Dashboard';
+    }
+
+    /* ══════════════════════════════════════
+       REPORT FORM
+    ══════════════════════════════════════ */
+    function checkCustomCat() {
+      const v = document.getElementById('issue-category').value;
+      document.getElementById('custom-cat-field').style.display = v === 'other' ? 'flex' : 'none';
+    }
+
+    function setPriority(el, level) {
+      document.querySelectorAll('.pri-btn').forEach(b => b.classList.remove('sel'));
+      el.classList.add('sel');
+    }
+
+    function resetForm() {
+      document.querySelectorAll('#tab-report input, #tab-report select, #tab-report textarea').forEach(el => el.value = '');
+      document.getElementById('preview-grid').innerHTML = '';
+      uploadedImages = [];
+      document.querySelectorAll('.pri-btn').forEach(b => b.classList.remove('sel'));
+      document.querySelector('.pri-btn.medium').classList.add('sel');
+      showToast('Form reset', 'info');
+    }
+
+    function submitComplaint() {
+      const title = document.getElementById('f-title').value.trim();
+      const desc = document.getElementById('f-desc').value.trim();
+      if (!title || !desc) { showToast('Please fill in at least title and description.', 'error'); return; }
+      showToast('Complaint submitted! ID: CMP-006', 'success');
+      setTimeout(() => switchTab('complaints'), 1400);
+    }
+
+    /* ══════════════════════════════════════
+       IMAGE / CAMERA
+    ══════════════════════════════════════ */
+    let uploadedImages = [];
+    let cameraStream = null;
+
+    function handleFileUpload(e) {
+      Array.from(e.target.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = ev => addPreview(ev.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function addPreview(src) {
+      uploadedImages.push(src);
+      const grid = document.getElementById('preview-grid');
+      const idx = uploadedImages.length - 1;
+      const div = document.createElement('div');
+      div.className = 'preview-item';
+      div.innerHTML = `<img src="${src}" alt="preview"><button onclick="removePreview(this,${idx})">×</button>`;
+      grid.appendChild(div);
+    }
+
+    function removePreview(btn, idx) {
+      uploadedImages.splice(idx, 1);
+      btn.parentElement.remove();
+    }
+
+    async function startCamera() {
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const vid = document.getElementById('camera-feed');
+        vid.srcObject = cameraStream;
+        vid.style.display = 'block';
+        document.getElementById('camera-controls').style.display = 'flex';
+      } catch (e) {
+        showToast('Camera access denied or unavailable.', 'error');
+      }
+    }
+
+    function capturePhoto() {
+      const vid = document.getElementById('camera-feed');
+      const canvas = document.getElementById('snap-canvas');
+      canvas.width = vid.videoWidth;
+      canvas.height = vid.videoHeight;
+      canvas.getContext('2d').drawImage(vid, 0, 0);
+      addPreview(canvas.toDataURL('image/jpeg'));
+      stopCamera();
+      showToast('Photo captured!', 'success');
+    }
+
+    function stopCamera() {
+      if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
+      document.getElementById('camera-feed').style.display = 'none';
+      document.getElementById('camera-controls').style.display = 'none';
+      cameraStream = null;
+    }
+
+    /* ══════════════════════════════════════
+       COMPLAINTS FILTER
+    ══════════════════════════════════════ */
+    function filterComplaints(btn, type) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('#f-complaints-table tbody tr').forEach(r => {
+        r.style.display = (type === 'all' || r.dataset.status === type) ? '' : 'none';
+      });
+    }
+
+    /* ══════════════════════════════════════
+       COMPLAINT DETAIL MODAL
+    ══════════════════════════════════════ */
+    const STATUS_CLASS = {
+      IN_PROGRESS: 'b-progress', SUBMITTED: 'b-submitted', CLOSED: 'b-closed',
+      REOPENED: 'b-reopened', RESOLVED: 'b-resolved', DELAYED: 'b-delayed',
+    };
+
+    const PRI_CLASS = { HIGH: 'p-high', MEDIUM: 'p-medium', LOW: 'p-low' };
+
+    function openComplaintDetail(c) {
+      document.getElementById('cd-title').textContent = c.title;
+      document.getElementById('cd-id').textContent = c.id + ' · Reported ' + c.date;
+
+      document.getElementById('cd-status').innerHTML = `<span class="badge ${STATUS_CLASS[c.status] || 'b-submitted'}">${c.status.replace(/_/g, ' ')}</span>`;
+      document.getElementById('cd-priority').innerHTML = `<span class="pri-dot ${PRI_CLASS[c.priority] || 'p-medium'}">${c.priority}</span>`;
+      document.getElementById('cd-cat').textContent = c.cat;
+      document.getElementById('cd-loc').textContent = `Block ${c.block}, Floor ${c.floor}, Room ${c.room}`;
+      document.getElementById('cd-desc').textContent = c.desc;
+
+      const tl = document.getElementById('cd-timeline');
+      tl.innerHTML = '';
+      c.history.forEach((h, i) => {
+        const cls = i === c.history.length - 1 ? 'active' : 'done';
+        tl.innerHTML += `
+      <div class="tstep">
+        <div class="tstep-dot ${cls}">${i + 1}</div>
+        <div class="tstep-info">
+          <div class="ts-title">${h.s.replace(/_/g, ' ')} <span style="font-size:11px;color:var(--muted);margin-left:8px;">by ${h.by}</span></div>
+          <div class="ts-time">${h.time}</div>
+          ${h.r ? `<div class="ts-remark">"${h.r}"</div>` : ''}
+        </div>
+      </div>`;
+      });
+
+      document.getElementById('cd-reopen-section').style.display = c.status === 'RESOLVED' ? 'block' : 'none';
+      document.getElementById('complaint-detail-modal').classList.add('open');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    /* backdrop click */
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+      m.addEventListener('click', function (e) { if (e.target === this) this.classList.remove('open'); });
+    });
+
+    /* ══════════════════════════════════════
+       LOGOUT
+    ══════════════════════════════════════ */
+    function doLogout() {
+      showToast('Signed out successfully', 'info');
+      setTimeout(() => { window.location.href = 'login.html'; }, 700);
+    }
+
+    function openContact() {
+      window.open('https://www.niet.co.in/contact-us', '_blank', 'noopener,noreferrer');
+    }
+
+    /* ══════════════════════════════════════
+       TOAST
+    ══════════════════════════════════════ */
+    function showToast(msg, type = 'info') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + type + ' show';
+      setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
+    /* Escape key */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyFacultyProfileToUI();
+      setNotifMutedUI(getNotifMuted());
+    });
+  </script>
+
+</body>
+
+</html>
