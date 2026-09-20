@@ -311,7 +311,8 @@ img {
 /* ── Main Content ── */
 .main-content {
   overflow-y: auto;
-  background: var(--navy);
+  background: var(--bg);
+  min-height: 100vh;
 }
 
 /* Topbar */

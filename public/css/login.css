@@ -35,7 +35,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 
-  background: url("NIET_Campus_Website.webp") no-repeat center/cover;
+  background: url("/images/NIET_Campus_Website.webp") no-repeat center/cover;
 }
 
 h1,
