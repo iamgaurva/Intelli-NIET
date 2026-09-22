@@ -8,7 +8,7 @@ The system provides separate interfaces for **Faculty** and **Administrators**, 
 
 ## Live Demo
 
-**Website:** [Add your Render URL here]
+**Website:**  https://intelli-niet.onrender.com 
 
 ## ✨ Features
 
