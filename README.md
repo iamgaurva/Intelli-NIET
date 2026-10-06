@@ -10,7 +10,6 @@ The system provides separate interfaces for **Faculty** and **Administrators**, 
 
 **Website:**  https://intelli-niet.onrender.com 
 
-
 ## ✨ Features
 
 ### Faculty
