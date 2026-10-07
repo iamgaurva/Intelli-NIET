@@ -981,3 +981,48 @@ img {
   .content-pad { padding: 20px 16px; }
   .topbar      { padding: 14px 16px; }
 }
+
+/* ================================
+   Analytics Date Filter
+   ================================ */
+
+.analytics-date-filter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.analytics-date-filter label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+}
+
+.analytics-date-filter input[type="date"] {
+    padding: 9px 12px;
+    min-width: 150px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #333;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.analytics-date-filter input[type="date"]:hover {
+    border-color: #999;
+}
+
+.analytics-date-filter input[type="date"]:focus {
+    border-color: #666;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+}

@@ -50,6 +50,54 @@ async function loadAdminComplaints() {
         );
     }
 }
+async function deleteAdminComplaint(complaintId) {
+    const confirmed = confirm(
+        `Are you sure you want to delete complaint ${complaintId}?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        showToast('Deleting complaint...', 'info');
+
+        const response = await fetch(
+            `/api/complaints/${encodeURIComponent(complaintId)}`,
+            {
+                method: 'DELETE'
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.status === 401) {
+            window.location.href = '/login.html';
+            return;
+        }
+
+        if (response.status === 403) {
+            showToast('You are not allowed to delete this complaint.', 'error');
+            return;
+        }
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || 'Unable to delete complaint');
+        }
+
+        showToast('Complaint deleted successfully.', 'success');
+
+        await loadAdminComplaints();
+
+    } catch (error) {
+        console.error('Delete complaint error:', error);
+
+        showToast(
+            error.message || 'Unable to delete complaint.',
+            'error'
+        );
+    }
+}
 
 
 // ======================================================
@@ -228,11 +276,18 @@ function renderAdminComplaints(complaints) {
             <td>
                 <div class="action-btns">
 
-                    <button
-                        class="action-btn ab-view"
-                        onclick="viewComplaint('${complaint.complaintId}')">
-                        View
-                    </button>
+                   <button
+    class="action-btn ab-view"
+    onclick="viewComplaint('${complaint.complaintId}')">
+    View
+</button>
+
+<button
+    class="action-btn"
+    style="color: var(--accent);"
+    onclick="deleteAdminComplaint('${complaint.complaintId}')">
+    Delete
+</button>
 
                     ${complaint.status === "SUBMITTED" ||
                 complaint.status === "REOPENED"
@@ -1347,82 +1402,6 @@ async function resolveComplaint() {
         );
     }
 }
-async function downloadAnalyticsExcel() {
-    try {
-        if (!allComplaints || allComplaints.length === 0) {
-            await loadAdminComplaints();
-        }
-
-        if (!allComplaints || allComplaints.length === 0) {
-            showToast('No complaint data available.', 'error');
-            return;
-        }
-
-        const headers = [
-            'Complaint ID',
-            'Title',
-            'Category',
-            'Priority',
-            'Block',
-            'Floor',
-            'Room',
-            'Faculty',
-            'Email',
-            'Status',
-            'Description',
-            'Created At'
-        ];
-
-        const rows = allComplaints.map(complaint => [
-            complaint.complaintId,
-            complaint.title,
-            complaint.category,
-            complaint.priority,
-            complaint.block,
-            complaint.floor || '',
-            complaint.room || '',
-            complaint.faculty?.name || '',
-            complaint.faculty?.email || '',
-            complaint.status,
-            complaint.description,
-            new Date(complaint.createdAt).toLocaleString('en-IN')
-        ]);
-
-        const csvContent = [
-            headers,
-            ...rows
-        ]
-        .map(row =>
-            row.map(value =>
-                `"${String(value ?? '').replace(/"/g, '""')}"`
-            ).join(',')
-        )
-        .join('\n');
-
-        const blob = new Blob(
-            ['\ufeff' + csvContent],
-            { type: 'text/csv;charset=utf-8;' }
-        );
-
-        const url = URL.createObjectURL(blob);
-
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `Intelli-NIET_Complaints_${new Date().toISOString().slice(0, 10)}.csv`;
-
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        URL.revokeObjectURL(url);
-
-        showToast('Complaint data downloaded successfully!', 'success');
-
-    } catch (error) {
-        console.error('Excel download error:', error);
-        showToast('Unable to download complaint data.', 'error');
-    }
-}
 async function downloadAnalyticsPdf() {
     try {
         if (!allComplaints || allComplaints.length === 0) {
@@ -1434,6 +1413,42 @@ async function downloadAnalyticsPdf() {
             return;
         }
 
+        const fromDateValue = document.getElementById('analytics-from-date')?.value;
+        const toDateValue = document.getElementById('analytics-to-date')?.value;
+
+        let filteredComplaints = [...allComplaints];
+
+        if (fromDateValue) {
+            const fromDate = new Date(`${fromDateValue}T00:00:00`);
+
+            filteredComplaints = filteredComplaints.filter(complaint => {
+                return new Date(complaint.createdAt) >= fromDate;
+            });
+        }
+
+        if (toDateValue) {
+            const toDate = new Date(`${toDateValue}T23:59:59`);
+
+            filteredComplaints = filteredComplaints.filter(complaint => {
+                return new Date(complaint.createdAt) <= toDate;
+            });
+        }
+
+        if (fromDateValue && toDateValue) {
+            const fromDate = new Date(`${fromDateValue}T00:00:00`);
+            const toDate = new Date(`${toDateValue}T23:59:59`);
+
+            if (fromDate > toDate) {
+                showToast('From date cannot be after To date.', 'error');
+                return;
+            }
+        }
+
+        if (filteredComplaints.length === 0) {
+            showToast('No complaints found for the selected date range.', 'error');
+            return;
+        }
+
         const printWindow = window.open('', '_blank');
 
         if (!printWindow) {
@@ -1441,7 +1456,20 @@ async function downloadAnalyticsPdf() {
             return;
         }
 
-        const rows = allComplaints.map(complaint => `
+        const formatDate = (dateValue) => {
+            if (!dateValue) {
+                return 'All dates';
+            }
+
+            return new Date(`${dateValue}T00:00:00`)
+                .toLocaleDateString('en-IN');
+        };
+
+        const dateRange = fromDateValue || toDateValue
+            ? `${formatDate(fromDateValue)} - ${formatDate(toDateValue)}`
+            : 'All dates';
+
+        const rows = filteredComplaints.map(complaint => `
             <tr>
                 <td>${complaint.complaintId}</td>
                 <td>${complaint.title}</td>
@@ -1475,6 +1503,12 @@ async function downloadAnalyticsPdf() {
 
                     .subtitle {
                         color: #666;
+                        margin-bottom: 10px;
+                    }
+
+                    .date-range {
+                        color: #333;
+                        font-weight: bold;
                         margin-bottom: 25px;
                     }
 
@@ -1527,29 +1561,36 @@ async function downloadAnalyticsPdf() {
                     Generated on ${new Date().toLocaleString('en-IN')}
                 </div>
 
+                <div class="date-range">
+                    Report Date Range: ${dateRange}
+                </div>
+
                 <div class="summary">
+
                     <div class="summary-box">
                         <strong>Total Complaints</strong><br>
-                        ${allComplaints.length}
+                        ${filteredComplaints.length}
                     </div>
 
                     <div class="summary-box">
                         <strong>Submitted</strong><br>
-                        ${allComplaints.filter(c => c.status === 'SUBMITTED').length}
+                        ${filteredComplaints.filter(c => c.status === 'SUBMITTED').length}
                     </div>
 
                     <div class="summary-box">
                         <strong>In Progress</strong><br>
-                        ${allComplaints.filter(c => c.status === 'IN_PROGRESS').length}
+                        ${filteredComplaints.filter(c => c.status === 'IN_PROGRESS').length}
                     </div>
 
                     <div class="summary-box">
                         <strong>Resolved</strong><br>
-                        ${allComplaints.filter(c => c.status === 'RESOLVED').length}
+                        ${filteredComplaints.filter(c => c.status === 'RESOLVED').length}
                     </div>
+
                 </div>
 
                 <table>
+
                     <thead>
                         <tr>
                             <th>Complaint ID</th>
@@ -1568,6 +1609,7 @@ async function downloadAnalyticsPdf() {
                     <tbody>
                         ${rows}
                     </tbody>
+
                 </table>
 
                 <br>

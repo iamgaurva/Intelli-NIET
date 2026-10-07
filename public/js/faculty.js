@@ -440,11 +440,18 @@ function createComplaintRow(complaint) {
             priority.textContent = priority.textContent.charAt(0).toUpperCase() + priority.textContent.slice(1);
             td.appendChild(priority);
         } else if (index === 7) {
-            const button = document.createElement('button');
-            button.className = 'action-btn ab-view';
-            button.textContent = 'View';
-            button.addEventListener('click', (event) => {
+            const actions = document.createElement('div');
+            actions.style.display = 'flex';
+            actions.style.gap = '8px';
+            actions.style.alignItems = 'center';
+
+            const viewButton = document.createElement('button');
+            viewButton.className = 'action-btn ab-view';
+            viewButton.textContent = 'View';
+
+            viewButton.addEventListener('click', (event) => {
                 event.stopPropagation();
+
                 openComplaintDetail({
                     id: complaint.complaintId,
                     title: complaint.title,
@@ -459,7 +466,21 @@ function createComplaintRow(complaint) {
                     history: buildComplaintHistory(complaint)
                 });
             });
-            td.appendChild(button);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'action-btn';
+            deleteButton.textContent = 'Delete';
+            deleteButton.style.color = 'var(--accent)';
+
+            deleteButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                deleteComplaint(complaint.complaintId);
+            });
+
+            actions.appendChild(viewButton);
+            actions.appendChild(deleteButton);
+
+            td.appendChild(actions);
         }
 
         row.appendChild(td);
@@ -509,6 +530,48 @@ async function loadFacultyComplaints() {
     } catch (error) {
         console.error('Loading faculty complaints error:', error);
         tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--accent);padding:30px;">Unable to load complaints. Please refresh the page.</td></tr>';
+    }
+}
+async function deleteComplaint(complaintId) {
+    const confirmed = confirm(
+        `Are you sure you want to delete complaint ${complaintId}?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        showToast('Deleting complaint...', 'info');
+
+        const response = await fetch(
+            `/api/complaints/${encodeURIComponent(complaintId)}`,
+            {
+                method: 'DELETE'
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.status === 401) {
+            window.location.href = '/login.html';
+            return;
+        }
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || 'Unable to delete complaint');
+        }
+
+        showToast('Complaint deleted successfully.', 'success');
+
+        await loadFacultyComplaints();
+
+    } catch (error) {
+        console.error('Delete complaint error:', error);
+        showToast(
+            error.message || 'Unable to delete complaint.',
+            'error'
+        );
     }
 }
 

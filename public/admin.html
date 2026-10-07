@@ -511,166 +511,189 @@
             </div>
           </div>
           <div class="report-download-row">
-            <button type="button" class="download-report-btn" onclick="downloadAnalyticsPdf()">Download report as
-              PDF</button>
-            <button type="button" class="download-report-btn download-report-btn--secondary"
-              onclick="downloadAnalyticsExcel()">Download report as Excel</button>
-          </div>
 
-          <div class="chart-card" style="margin-bottom:20px;">
-            <h4>Complaints by Block / Building</h4>
-            <div class="bar-chart" style="margin-top:8px;">
-              <div class="bar-row"><span class="bar-label">Block A</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:60%;background:var(--accent);"></div>
-                </div><span class="bar-val" style="color:var(--accent);">3</span>
+            <div class="report-download-row">
+
+              <div class="analytics-date-filter">
+
+                <label>
+                  From:
+                  <input type="date" id="analytics-from-date">
+                </label>
+
+                <label>
+                  To:
+                  <input type="date" id="analytics-to-date">
+                </label>
+
               </div>
-              <div class="bar-row"><span class="bar-label">Block B</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:20%;background:var(--sky);"></div>
-                </div><span class="bar-val" style="color:var(--sky);">1</span>
-              </div>
-              <div class="bar-row"><span class="bar-label">Block C</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:20%;background:var(--green);"></div>
-                </div><span class="bar-val" style="color:var(--green);">1</span>
-              </div>
-              <div class="bar-row"><span class="bar-label">Block D</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:0%;background:var(--muted);"></div>
-                </div><span class="bar-val" style="color:var(--muted);">0</span>
-              </div>
+
+              <button type="button" class="download-report-btn" onclick="downloadAnalyticsPdf()">
+                Download report as PDF
+              </button>
+
+              <button type="button" class="download-report-btn download-report-btn--secondary"
+                onclick="downloadAnalyticsExcel()">
+                Download report as Excel
+              </button>
+
             </div>
-          </div>
 
-          <div class="chart-card">
-            <h4>Priority Breakdown</h4>
-            <div class="bar-chart" style="margin-top:8px;">
-              <div class="bar-row"><span class="bar-label">High Priority</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:80%;background:var(--red);"></div>
-                </div><span class="bar-val" style="color:var(--red);">4</span>
-              </div>
-              <div class="bar-row"><span class="bar-label">Medium</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:20%;background:var(--yellow);"></div>
-                </div><span class="bar-val" style="color:var(--yellow);">1</span>
-              </div>
-              <div class="bar-row"><span class="bar-label">Low</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:0%;background:var(--green);"></div>
-                </div><span class="bar-val" style="color:var(--muted);">0</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="chart-card issue-trend-card">
-            <div class="issue-trend-head">
-              <h4>Most Reported Issue Type</h4>
-              <span class="issue-highlight-badge">Top: Water / Plumbing</span>
-            </div>
-            <p class="issue-trend-sub">Water / Plumbing complaints are currently highest and may need priority
-              maintenance planning.</p>
-            <div class="bar-chart" style="margin-top:10px;">
-              <div class="bar-row"><span class="bar-label">Water / Plumbing</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:80%;background:var(--accent);"></div>
-                </div><span class="bar-val" style="color:var(--accent);">4</span>
-              </div>
-              <div class="bar-row"><span class="bar-label">Electrical</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:20%;background:var(--yellow);"></div>
-                </div><span class="bar-val" style="color:var(--yellow);">1</span>
-              </div>
-              <div class="bar-row"><span class="bar-label">Furniture</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:0%;background:var(--green);"></div>
-                </div><span class="bar-val" style="color:var(--muted);">0</span>
-              </div>
-              <div class="bar-row"><span class="bar-label">Network</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:0%;background:#a855f7;"></div>
-                </div><span class="bar-val" style="color:var(--muted);">0</span>
-              </div>
-              <div class="bar-row"><span class="bar-label">Other</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="width:0%;background:var(--muted);"></div>
-                </div><span class="bar-val" style="color:var(--muted);">0</span>
-              </div>
-            </div>
-          </div>
-        </div><!-- /tab-analytics -->
-
-        <!-- ─────────────── PROFILE TAB ─────────────── -->
-        <div id="tab-profile" class="tab-pane">
-          <h3 class="profile-page-title">Your profile</h3>
-          <p class="profile-page-sub">Update your display name and contact details. Changes are saved on this device
-            only. Click your name in the sidebar anytime to open this page.</p>
-          <div class="profile-card">
-            <label class="profile-label" for="adm-pf-name">Full name</label>
-            <input type="text" id="adm-pf-name" class="profile-input" placeholder="e.g. Admin — Campus Operations"
-              autocomplete="name">
-
-            <label class="profile-label" for="adm-pf-phone">Phone number</label>
-            <input type="tel" id="adm-pf-phone" class="profile-input" placeholder="e.g. +91 98765 43210"
-              autocomplete="tel">
-
-            <label class="profile-label" for="adm-pf-role">Role / desk (optional)</label>
-            <input type="text" id="adm-pf-role" class="profile-input"
-              placeholder="e.g. Estate &amp; maintenance coordinator">
-
-            <label class="profile-label" for="adm-pf-email">Email (optional)</label>
-            <input type="email" id="adm-pf-email" class="profile-input" placeholder="admin@niet.co.in"
-              autocomplete="email">
-
-            <div class="profile-actions">
-              <button type="button" class="btn-submit profile-save-btn" onclick="saveAdminProfile()">Save
-                changes</button>
-            </div>
-          </div>
-        </div><!-- /tab-profile -->
-
-        <!-- ─────────────── NOTIFICATIONS TAB ─────────────── -->
-        <div id="tab-notifications" class="tab-pane">
-          <div class="notif-toolbar">
-            <h3>System notifications</h3>
-            <button type="button" class="btn-mute" id="btn-mute-notif" onclick="toggleMuteNotifications()">Mute
-              notifications</button>
-          </div>
-          <div class="notif-muted-banner" id="notif-muted-banner">You have muted notifications. You can turn them back
-            on anytime.</div>
-          <div class="notif-list" id="admin-notif-list">
-            <div class="notif-item">
-              <div class="ni-dot" style="background:var(--accent);"></div>
-              <div>
-                <div class="ni-title">New complaint submitted — CMP-005</div>
-                <div class="ni-desc">Prof. Ramesh reported "Fan not working in classroom" in Block A, Room 101. Requires
-                  assignment.</div>
-                <div class="ni-time">Apr 3, 2026 · 8:28 AM</div>
-              </div>
-            </div>
-            <div class="notif-item">
-              <div class="ni-dot" style="background:var(--yellow);"></div>
-              <div>
-                <div class="ni-title">Complaint CMP-003 Reopened by Faculty</div>
-                <div class="ni-desc">Prof. Ramesh reopened "Water leakage near classroom" — issue still persists after
-                  resolution.</div>
-                <div class="ni-time">Apr 1, 2026 · 5:12 PM</div>
-              </div>
-            </div>
-            <div class="notif-item" style="opacity:0.6;">
-              <div class="ni-dot" style="background:var(--green);"></div>
-              <div>
-                <div class="ni-title">Complaint CMP-004 Verified &amp; Closed</div>
-                <div class="ni-desc">Faculty verified resolution of "Water leakage near classroom". Complaint closed.
+            <div class="chart-card" style="margin-bottom:20px;">
+              <h4>Complaints by Block / Building</h4>
+              <div class="bar-chart" style="margin-top:8px;">
+                <div class="bar-row"><span class="bar-label">Block A</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:60%;background:var(--accent);"></div>
+                  </div><span class="bar-val" style="color:var(--accent);">3</span>
                 </div>
-                <div class="ni-time">Apr 1, 2026 · 6:36 PM</div>
+                <div class="bar-row"><span class="bar-label">Block B</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:20%;background:var(--sky);"></div>
+                  </div><span class="bar-val" style="color:var(--sky);">1</span>
+                </div>
+                <div class="bar-row"><span class="bar-label">Block C</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:20%;background:var(--green);"></div>
+                  </div><span class="bar-val" style="color:var(--green);">1</span>
+                </div>
+                <div class="bar-row"><span class="bar-label">Block D</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:0%;background:var(--muted);"></div>
+                  </div><span class="bar-val" style="color:var(--muted);">0</span>
+                </div>
               </div>
             </div>
-          </div>
-        </div><!-- /tab-notifications -->
 
-      </div><!-- /content-pad -->
+            <div class="chart-card">
+              <h4>Priority Breakdown</h4>
+              <div class="bar-chart" style="margin-top:8px;">
+                <div class="bar-row"><span class="bar-label">High Priority</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:80%;background:var(--red);"></div>
+                  </div><span class="bar-val" style="color:var(--red);">4</span>
+                </div>
+                <div class="bar-row"><span class="bar-label">Medium</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:20%;background:var(--yellow);"></div>
+                  </div><span class="bar-val" style="color:var(--yellow);">1</span>
+                </div>
+                <div class="bar-row"><span class="bar-label">Low</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:0%;background:var(--green);"></div>
+                  </div><span class="bar-val" style="color:var(--muted);">0</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-card issue-trend-card">
+              <div class="issue-trend-head">
+                <h4>Most Reported Issue Type</h4>
+                <span class="issue-highlight-badge">Top: Water / Plumbing</span>
+              </div>
+              <p class="issue-trend-sub">Water / Plumbing complaints are currently highest and may need priority
+                maintenance planning.</p>
+              <div class="bar-chart" style="margin-top:10px;">
+                <div class="bar-row"><span class="bar-label">Water / Plumbing</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:80%;background:var(--accent);"></div>
+                  </div><span class="bar-val" style="color:var(--accent);">4</span>
+                </div>
+                <div class="bar-row"><span class="bar-label">Electrical</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:20%;background:var(--yellow);"></div>
+                  </div><span class="bar-val" style="color:var(--yellow);">1</span>
+                </div>
+                <div class="bar-row"><span class="bar-label">Furniture</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:0%;background:var(--green);"></div>
+                  </div><span class="bar-val" style="color:var(--muted);">0</span>
+                </div>
+                <div class="bar-row"><span class="bar-label">Network</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:0%;background:#a855f7;"></div>
+                  </div><span class="bar-val" style="color:var(--muted);">0</span>
+                </div>
+                <div class="bar-row"><span class="bar-label">Other</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width:0%;background:var(--muted);"></div>
+                  </div><span class="bar-val" style="color:var(--muted);">0</span>
+                </div>
+              </div>
+            </div>
+          </div><!-- /tab-analytics -->
+
+          <!-- ─────────────── PROFILE TAB ─────────────── -->
+          <div id="tab-profile" class="tab-pane">
+            <h3 class="profile-page-title">Your profile</h3>
+            <p class="profile-page-sub">Update your display name and contact details. Changes are saved on this device
+              only. Click your name in the sidebar anytime to open this page.</p>
+            <div class="profile-card">
+              <label class="profile-label" for="adm-pf-name">Full name</label>
+              <input type="text" id="adm-pf-name" class="profile-input" placeholder="e.g. Admin — Campus Operations"
+                autocomplete="name">
+
+              <label class="profile-label" for="adm-pf-phone">Phone number</label>
+              <input type="tel" id="adm-pf-phone" class="profile-input" placeholder="e.g. +91 98765 43210"
+                autocomplete="tel">
+
+              <label class="profile-label" for="adm-pf-role">Role / desk (optional)</label>
+              <input type="text" id="adm-pf-role" class="profile-input"
+                placeholder="e.g. Estate &amp; maintenance coordinator">
+
+              <label class="profile-label" for="adm-pf-email">Email (optional)</label>
+              <input type="email" id="adm-pf-email" class="profile-input" placeholder="admin@niet.co.in"
+                autocomplete="email">
+
+              <div class="profile-actions">
+                <button type="button" class="btn-submit profile-save-btn" onclick="saveAdminProfile()">Save
+                  changes</button>
+              </div>
+            </div>
+          </div><!-- /tab-profile -->
+
+          <!-- ─────────────── NOTIFICATIONS TAB ─────────────── -->
+          <div id="tab-notifications" class="tab-pane">
+            <div class="notif-toolbar">
+              <h3>System notifications</h3>
+              <button type="button" class="btn-mute" id="btn-mute-notif" onclick="toggleMuteNotifications()">Mute
+                notifications</button>
+            </div>
+            <div class="notif-muted-banner" id="notif-muted-banner">You have muted notifications. You can turn them back
+              on anytime.</div>
+            <div class="notif-list" id="admin-notif-list">
+              <div class="notif-item">
+                <div class="ni-dot" style="background:var(--accent);"></div>
+                <div>
+                  <div class="ni-title">New complaint submitted — CMP-005</div>
+                  <div class="ni-desc">Prof. Ramesh reported "Fan not working in classroom" in Block A, Room 101.
+                    Requires
+                    assignment.</div>
+                  <div class="ni-time">Apr 3, 2026 · 8:28 AM</div>
+                </div>
+              </div>
+              <div class="notif-item">
+                <div class="ni-dot" style="background:var(--yellow);"></div>
+                <div>
+                  <div class="ni-title">Complaint CMP-003 Reopened by Faculty</div>
+                  <div class="ni-desc">Prof. Ramesh reopened "Water leakage near classroom" — issue still persists after
+                    resolution.</div>
+                  <div class="ni-time">Apr 1, 2026 · 5:12 PM</div>
+                </div>
+              </div>
+              <div class="notif-item" style="opacity:0.6;">
+                <div class="ni-dot" style="background:var(--green);"></div>
+                <div>
+                  <div class="ni-title">Complaint CMP-004 Verified &amp; Closed</div>
+                  <div class="ni-desc">Faculty verified resolution of "Water leakage near classroom". Complaint closed.
+                  </div>
+                  <div class="ni-time">Apr 1, 2026 · 6:36 PM</div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /tab-notifications -->
+
+        </div><!-- /content-pad -->
     </main>
   </div><!-- /app-layout -->
 

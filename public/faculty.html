@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Intelli-NIET — Faculty Dashboard</title>
   <link rel="stylesheet" href="/css/faculty.css">
+  <link rel="stylesheet" href="/css/LostFound.css">
 </head>
 
 <body>
@@ -60,6 +61,17 @@
             My Complaints
           </button>
         </div>
+
+        <button class="nav-item" id="nav-lost-found" onclick="switchTab('lost-found')">
+
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M20 6h-3.18L15 4H9L7.18 6H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-8 11.5A4.5 4.5 0 1 1 12 8a4.5 4.5 0 0 1 0 9.5zM12 10a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" />
+          </svg>
+
+          Lost &amp; Found
+
+        </button>
 
         <div class="nav-section">
           <div class="nav-label">Activity</div>
@@ -367,6 +379,7 @@
               Complaint</button>
           </div>
 
+
           <div class="filter-row" style="margin-bottom:20px;">
             <button class="filter-btn active" data-filter="all" onclick="filterComplaints(this,'all')">All (0)</button>
             <button class="filter-btn" data-filter="submitted"
@@ -402,6 +415,259 @@
             </table>
           </div>
         </div><!-- /tab-complaints -->
+
+        <!-- ─────────────── LOST & FOUND TAB ─────────────── -->
+        <div id="tab-lost-found" class="tab-pane">
+
+          <!-- HEADER -->
+          <div class="lf-header">
+            <div>
+              <h3>Lost &amp; Found</h3>
+              <p>Report an item that you have lost or found on campus.</p>
+            </div>
+          </div>
+
+
+          <!-- LOST / FOUND BUTTONS -->
+          <div class="lf-type-buttons">
+
+            <button type="button" class="lf-type-btn" id="lf-lost-btn" onclick="openLostFoundForm('LOST')">
+
+              <span class="lf-type-icon">⌕</span>
+
+              <span>
+                <strong>Lost Item</strong>
+                <small>Report an item you lost</small>
+              </span>
+
+            </button>
+
+
+            <button type="button" class="lf-type-btn" id="lf-found-btn" onclick="openLostFoundForm('FOUND')">
+
+              <span class="lf-type-icon">✓</span>
+
+              <span>
+                <strong>Found Item</strong>
+                <small>Report an item you found</small>
+              </span>
+
+            </button>
+
+          </div>
+          <!-- =========================================
+     MY LOST ITEM REPORTS
+========================================= -->
+
+<div class="lf-my-reports-section">
+
+    <div class="lf-my-reports-header">
+
+        <div>
+            <h4>My Lost Item Reports</h4>
+
+            <p>
+                View the lost items you have reported.
+            </p>
+        </div>
+
+        <span
+            id="lf-my-reports-count"
+            class="lf-reports-count">
+            0 Reports
+        </span>
+
+    </div>
+
+
+    <div
+        id="lf-my-reports-list"
+        class="lf-my-reports-list">
+    </div>
+
+</div>
+
+
+          <!-- =========================================
+       PREVIOUS FOUND ITEMS
+  ========================================= -->
+
+          <div class="lf-found-section">
+
+            <div class="lf-found-header">
+
+              <div>
+                <h4>Found Items</h4>
+
+                <p>
+                  Browse items previously reported as found.
+                </p>
+              </div>
+
+              <!-- SEARCH -->
+              <div class="lf-search-box">
+
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M9.5 3a6.5 6.5 0 1 0 4.02 11.61l4.43 4.43 1.41-1.41-4.43-4.43A6.5 6.5 0 0 0 9.5 3zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z" />
+                </svg>
+
+                <input type="text" id="lf-found-search" placeholder="Search found items..." autocomplete="off">
+
+              </div>
+
+            </div>
+
+
+            <!-- FOUND ITEMS -->
+            <div id="lf-found-list" class="lf-found-list"></div>
+
+          </div>
+          
+
+
+          <!-- =========================================
+       REPORT FORM
+  ========================================= -->
+
+          <div id="lf-form-container" class="lf-form-container">
+
+            <div class="lf-form-header">
+
+              <div>
+
+                <span id="lf-form-badge" class="lf-form-badge">
+                  LOST ITEM
+                </span>
+
+                <h4 id="lf-form-title">
+                  Report Lost Item
+                </h4>
+
+                <p id="lf-form-description">
+                  Enter the details of the item you lost.
+                </p>
+
+              </div>
+
+
+              <button type="button" class="lf-close-btn" onclick="closeLostFoundForm()">
+                ×
+              </button>
+
+            </div>
+
+
+            <form id="lost-found-form">
+
+              <input type="hidden" id="lf-item-type" value="lost">
+
+
+              <div class="lf-form-grid">
+
+                <!-- ITEM NAME -->
+                <div class="lf-field lf-full">
+
+                  <label for="lf-item-name">
+                    Item Name <span>*</span>
+                  </label>
+
+                  <input type="text" id="lf-item-name" placeholder="e.g. Black Wallet" required>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+                <div class="lf-field lf-full">
+
+                  <label for="lf-item-description">
+                    Description <span>*</span>
+                  </label>
+
+                  <textarea id="lf-item-description" rows="5"
+                    placeholder="Describe the item, colour, identifying marks, etc." required></textarea>
+
+                </div>
+
+
+                <!-- LOCATION -->
+                <div class="lf-field">
+
+                  <label for="lf-item-location">
+                    Location
+                  </label>
+
+                  <input type="text" id="lf-item-location" placeholder="e.g. Block D, Library">
+
+                </div>
+
+
+                <!-- DATE -->
+                <div class="lf-field">
+
+                  <label for="lf-item-date">
+                    Date <span>*</span>
+                  </label>
+
+                  <input type="date" id="lf-item-date" required>
+
+                </div>
+
+
+                <!-- IMAGE -->
+                <div class="lf-field lf-full">
+
+                  <label for="lf-item-image">
+                    Image
+                  </label>
+
+                  <div class="lf-image-upload">
+
+                    <input type="file" id="lf-item-image" accept="image/*">
+
+                    <div class="lf-upload-content">
+
+                      <div class="lf-upload-icon">
+                        ↑
+                      </div>
+
+                      <div>
+                        <strong>Upload an image</strong>
+                        <p>JPG, PNG or other image format</p>
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                  <div id="lf-image-name" class="lf-image-name">
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <!-- FORM FOOTER -->
+              <div class="lf-form-footer">
+
+                <button type="button" class="lf-cancel-btn" onclick="closeLostFoundForm()">
+                  Cancel
+                </button>
+
+                <button type="submit" class="lf-submit-btn">
+                  Submit Report
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+        <!-- /tab-lost-found -->
+        <!-- /tab-lost-found -->
 
         <!-- ─────────────── PROFILE TAB ─────────────── -->
         <div id="tab-profile" class="tab-pane">
@@ -548,7 +814,7 @@
   <div id="toast" class="toast"></div>
 
   <script src="/js/faculty.js"></script>
-
+  <script src="/js/LostFound.js"></script>
 </body>
 
 </html>

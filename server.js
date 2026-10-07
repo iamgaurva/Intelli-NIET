@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const authRoutes = require("./routes/auth");
 const complaintRoutes = require("./routes/complaints");
+const lostFoundRoutes = require("./routes/LostFound");
 const session = require("express-session");
 const MongoStore = require("connect-mongo").default;
 
@@ -37,6 +38,7 @@ app.use(
 );
 app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
+app.use("/api/lost-found", lostFoundRoutes);
 // Serve frontend
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -46,12 +48,41 @@ app.get("/", (req, res) => {
 });
 
 // Test API
-app.get("/api/test", (req, res) => {
-    res.json({
-        success: true,
-        message: "Intelli-NIET backend is working!"
-    });
-});
+function requireLogin(req, res, next) {
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({
+            success: false,
+            message: "Authentication required"
+        });
+    }
+
+    next();
+}
+
+function requireRole(role) {
+    return (req, res, next) => {
+        if (!req.session || !req.session.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Authentication required"
+            });
+        }
+
+        if (req.session.user.role !== role) {
+            return res.status(403).json({
+                success: false,
+                message: "Access denied"
+            });
+        }
+
+        next();
+    };
+}
+
+module.exports = {
+    requireLogin,
+    requireRole
+};
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)

@@ -148,5 +148,47 @@ router.put("/:complaintId/status", requireLogin, requireRole("admin"), async (re
         });
     }
 });
+router.delete("/:complaintId", requireLogin, async (req, res) => {
+    try {
+        const complaint = await Complaint.findOne({
+            complaintId: req.params.complaintId
+        });
+
+        if (!complaint) {
+            return res.status(404).json({
+                success: false,
+                message: "Complaint not found"
+            });
+        }
+
+        // Faculty can delete only their own complaint
+        if (req.session.user.role === "faculty") {
+            if (complaint.faculty.toString() !== req.session.user.id.toString()) {
+                return res.status(403).json({
+                    success: false,
+                    message: "You can only delete your own complaints"
+                });
+            }
+        }
+
+        // Admin can delete any complaint
+        await Complaint.deleteOne({
+            _id: complaint._id
+        });
+
+        res.json({
+            success: true,
+            message: "Complaint deleted successfully"
+        });
+
+    } catch (error) {
+        console.error("Delete complaint error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Unable to delete complaint"
+        });
+    }
+});
 
 module.exports = router;
