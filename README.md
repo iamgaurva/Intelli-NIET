@@ -6,9 +6,11 @@ Intelli-NIET is a full-stack web application designed to simplify and digitize t
 
 The system provides separate interfaces for **Faculty** and **Administrators**, with real-time complaint status synchronization through a MongoDB database.
 
+
 ## Live Demo
 
 **Website:**  https://intelli-niet.onrender.com 
+
 
 ## ✨ Features
 
