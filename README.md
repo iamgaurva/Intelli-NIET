@@ -63,7 +63,6 @@ The system provides separate interfaces for **Faculty** and **Administrators**, 
 
 ## 📁 Project Structure
 
-
 ```text
 Intelli-NIET/
 │
