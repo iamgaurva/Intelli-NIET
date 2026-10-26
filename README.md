@@ -4,6 +4,7 @@
 
 Intelli-NIET is a full-stack web application designed to simplify and digitize the process of submitting, tracking, and managing campus complaints.
 
+
 The system provides separate interfaces for **Faculty** and **Administrators**, with real-time complaint status synchronization through a MongoDB database.
 
 
